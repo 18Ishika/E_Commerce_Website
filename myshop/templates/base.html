@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopzee</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        input, select, textarea {
+    color: black !important;
+}
+
+        body {
+            background-color: #121212;
+            color: #E5E7EB;
+            font-family: 'Inter', sans-serif;
+        }
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-40px);
+            transition: .3s;
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .thumbnail.active {
+            border: 3px solid #B8860B;
+            box-shadow: 0 0 8px rgba(184,134,11,.7);
+        }
+        .product-image-main:hover {
+            transform: scale(1.02);
+            transition: .3s;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#121212',
+                        'secondary-dark': '#1F1F1F',
+                        'card-dark': '#303030',
+                        'accent-luxury': '#B8860B',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-primary-dark text-gray-200 min-h-screen">
+
+    <!-- Notification -->
+    <div id="message-box" class="message-box bg-accent-luxury text-white p-4 rounded-lg shadow-xl">
+        Item added to cart!
+    </div>
+
+    <!-- 🔥 NAVBAR FIXED & WORKING -->
+    <header class="bg-secondary-dark border-b border-card-dark p-4 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+
+            <!-- Logo -->
+            <h1 class="text-4xl font-extrabold text-accent-luxury tracking-wider cursor-pointer">
+                Shopzee
+            </h1>
+
+            <!-- Navigation -->
+            <nav>
+                <ul class="flex space-x-6 items-center">
+
+                    <li>
+                        <a href="{%url 'login' %}" class="hover:text-accent-luxury">Login</a>
+                    </li>
+
+                    <!-- SIGNUP DROPDOWN (FIXED) -->
+                    <li class="relative group">
+                        <a class="hover:text-accent-luxury cursor-pointer">Sign Up</a>
+
+                        <ul class="absolute left-0 hidden group-hover:block bg-card-dark mt-2 rounded-lg shadow-xl w-32">
+                            <li>
+                                <a href="{% url 'buyer_signup' %}" 
+                                   class="block px-4 py-2 hover:text-accent-luxury">Buyer</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'seller_signup' %}" 
+                                   class="block px-4 py-2 hover:text-accent-luxury">Seller</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-accent-luxury">Collection</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="hover:text-accent-luxury">Design</a>
+                    </li>
+
+                    <!-- Cart -->
+                    <li class="relative">
+                        <a href="#" class="hover:text-accent-luxury">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 inline-block"
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+
+                            <span id="cart-count"
+                                  class="absolute -top-1 -right-2 bg-red-600 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center font-bold">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+    
+
+    <!-- CONTENT BLOCK FOR EACH PAGE -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="bg-secondary-dark mt-16 p-8 text-center border-t border-card-dark">
+        <p class="text-gray-500 text-sm">
+            © Shopzee • 
+            <a href="#" class="text-accent-luxury hover:text-yellow-800">Privacy Policy</a>
+        </p>
+    </footer>
+
+</body>
+</html>

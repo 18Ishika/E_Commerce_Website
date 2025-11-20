@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+{% block title %} Seller Sign Up {% endblock %}
+
+{% block content %}
+
+<h2>Seller Sign Up</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+
+    <button type="submit"class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">Sign Up</button>
+</form>
+
+{% endblock %}
