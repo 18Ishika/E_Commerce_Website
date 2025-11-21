@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mx-auto py-10 px-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+
+    <!-- LEFT: IMAGES -->
+    <div>
+        {% if product.images.first %}
+        <img id="mainImage"
+             src="{{ product.images.first.image.url }}"
+             class="product-image-main w-full h-[450px] object-cover rounded-xl shadow-lg mb-4">
+        {% else %}
+        <img id="mainImage"
+             src="https://via.placeholder.com/450"
+             class="product-image-main w-full h-[450px] object-cover rounded-xl shadow-lg mb-4">
+        {% endif %}
+
+        <div class="flex gap-4 mt-4">
+            {% for img in product.images.all %}
+            <img src="{{ img.image.url }}"
+                class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent"
+                onclick="document.getElementById('mainImage').src='{{ img.image.url }}'; 
+                         document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active'));
+                         this.classList.add('active');">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- RIGHT: PRODUCT INFO -->
+    <div>
+        <h1 class="text-4xl font-bold mb-3">{{ product.name }}</h1>
+
+        <p class="text-accent-luxury text-3xl font-bold mb-4">₹{{ product.price }}</p>
+
+        <p class="mb-2 text-gray-400">⭐ {{ product.average_rating }} ({{ product.total_reviews }} reviews)</p>
+
+        <p class="mb-6">{{ product.description }}</p>
+
+        <p class="mb-4">
+            {% if product.stock > 0 %}
+                <span class="text-green-400 font-semibold">In stock ({{ product.stock }})</span>
+            {% else %}
+                <span class="text-red-500 font-semibold">Out of stock</span>
+            {% endif %}
+        </p>
+
+        <button class="w-full bg-accent-luxury hover:bg-yellow-700 text-black font-bold rounded-lg py-3 mt-4 transition">
+            Add to Cart
+        </button>
+    </div>
+
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="container mx-auto px-6 mt-12">
+    <h2 class="text-2xl font-bold mb-6">Customer Reviews</h2>
+
+    {% for review in product.reviews.all %}
+    <div class="bg-secondary-dark p-5 rounded-xl mb-4 shadow">
+        <p class="text-accent-luxury font-semibold mb-1">
+            {{ review.user.username }} • ⭐ {{ review.rating }}
+        </p>
+        <p class="text-gray-300">{{ review.review_text }}</p>
+        <p class="text-gray-500 text-sm mt-1">{{ review.created_at|date:"M j, Y" }}</p>
+    </div>
+    {% empty %}
+    <p class="text-gray-500">No reviews yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

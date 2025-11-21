@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mx-auto py-10 px-6">
+    <h2 class="text-3xl font-bold mb-8 text-accent-luxury">Latest Products</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {% for p in products %}
+        <a href="{% url 'product_detail' p.id %}"
+           class="bg-secondary-dark p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-[1.02] transition transform block">
+
+            <!-- Product Image -->
+            {% if p.images.first %}
+            <img src="{{ p.images.first.image.url }}"
+                class="w-full h-60 object-cover rounded-lg mb-4">
+            {% else %}
+            <img src="https://via.placeholder.com/300"
+                class="w-full h-60 object-cover rounded-lg mb-4">
+            {% endif %}
+
+            <!-- Product Title -->
+            <h3 class="text-xl font-semibold mb-1">{{ p.name }}</h3>
+
+            <!-- Price -->
+            <p class="text-accent-luxury font-bold text-lg mb-2">₹{{ p.price }}</p>
+
+            <!-- Ratings -->
+            <p class="text-sm text-gray-400">
+                ⭐ {{ p.average_rating }} ({{ p.total_reviews }} reviews)
+            </p>
+
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if not products %}
+    <p class="text-center text-gray-500 mt-10">No products available yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
