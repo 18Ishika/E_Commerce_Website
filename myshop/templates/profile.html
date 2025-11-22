@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mx-auto mt-12 bg-card-dark text-white p-8 rounded-xl shadow-xl max-w-2xl">
+
+    <h2 class="text-3xl font-extrabold text-accent-luxury mb-6 text-center">
+        My Profile
+    </h2>
+
+    <p class="text-lg mb-4"><strong>Username:</strong> {{ user.username }}</p>
+    <p class="text-lg mb-4"><strong>Email:</strong> {{ user.email }}</p>
+    <p class="text-lg mb-4"><strong>Role:</strong> {{ user.role|title }}</p>
+
+    {% if user.role == "buyer" %}
+        <p class="text-lg mb-4"><strong>City:</strong> {{ profile.city }}</p>
+        <p class="text-lg mb-4"><strong>Address:</strong> {{ profile.address }}</p>
+        <p class="text-lg mb-4"><strong>Phone:</strong> {{ profile.phone }}</p>
+    {% else %}
+        <p class="text-lg mb-4"><strong>Shop Name:</strong> {{ profile.shop_name }}</p>
+        <p class="text-lg mb-4"><strong>Business Address:</strong> {{ profile.business_address }}</p>
+        <p class="text-lg mb-4"><strong>Phone:</strong> {{ profile.phone }}</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

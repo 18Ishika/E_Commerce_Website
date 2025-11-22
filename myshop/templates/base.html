@@ -77,48 +77,66 @@
             <nav>
                 <ul class="flex space-x-6 items-center">
 
-                    <li>
-                        <a href="{%url 'login' %}" class="hover:text-accent-luxury">Login</a>
-                    </li>
+            {% if user.is_authenticated %}
 
-                    <!-- SIGNUP DROPDOWN (FIXED) -->
-                    <li class="relative group">
-                        <a class="hover:text-accent-luxury cursor-pointer">Sign Up</a>
+                <!-- Profile Icon -->
+                <li>
+                    <a href="{%url 'profile' %}" class="hover:text-accent-luxury flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5.121 17.804A6 6 0 1118.364 4.56m-1.415 10.94A9 9 0 016 20.485" />
+                        </svg>
+                        {{ user.username }}
+                    </a>
+                </li>
 
-                        <ul class="absolute left-0 hidden group-hover:block bg-card-dark mt-2 rounded-lg shadow-xl w-32">
-                            <li>
-                                <a href="{% url 'buyer_signup' %}" 
-                                   class="block px-4 py-2 hover:text-accent-luxury">Buyer</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'seller_signup' %}" 
-                                   class="block px-4 py-2 hover:text-accent-luxury">Seller</a>
-                            </li>
-                        </ul>
-                    </li>
+                <!-- Logout -->
+                <li>
+                    <a href="{% url 'logout' %}" class="hover:text-accent-luxury">Logout</a>
+                </li>
 
-                    <li>
-                        <a href="#" class="hover:text-accent-luxury">Collection</a>
-                    </li>
+                {% if user.role == "buyer" %}
+                <!-- Cart icon only for buyers -->
+                <li class="relative">
+                    <a href="#" class="hover:text-accent-luxury">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 inline-block"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-count"
+                            class="absolute -top-1 -right-2 bg-red-600 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                            0
+                        </span>
+                    </a>
+                </li>
+                {% endif %}
 
-                    <li>
-                        <a href="#" class="hover:text-accent-luxury">Design</a>
-                    </li>
+            {% else %}
 
-                    <!-- Cart -->
-                    <li class="relative">
-                        <a href="#" class="hover:text-accent-luxury">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 inline-block"
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
+                <!-- When user is NOT logged in -->
+                <li><a href="{% url 'login' %}" class="hover:text-accent-luxury">Login</a></li>
 
-                            <span id="cart-count"
-                                  class="absolute -top-1 -right-2 bg-red-600 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center font-bold">0</span>
-                        </a>
-                    </li>
-                </ul>
+                <!-- Signup dropdown -->
+                <li class="relative group">
+                    <a class="hover:text-accent-luxury cursor-pointer">Sign Up</a>
+                    <ul class="absolute left-0 hidden group-hover:block bg-card-dark mt-2 rounded-lg shadow-xl w-32">
+                        <li><a href="{% url 'buyer_signup' %}"
+                            class="block px-4 py-2 hover:text-accent-luxury">Buyer</a></li>
+                        <li><a href="{% url 'seller_signup' %}"
+                            class="block px-4 py-2 hover:text-accent-luxury">Seller</a></li>
+                    </ul>
+                </li>
+
+            {% endif %}
+
+            <!-- Visible to everyone -->
+            <li><a href="#" class="hover:text-accent-luxury">Collection</a></li>
+            <li><a href="#" class="hover:text-accent-luxury">Design</a></li>
+
+        </ul>
+
             </nav>
 
         </div>

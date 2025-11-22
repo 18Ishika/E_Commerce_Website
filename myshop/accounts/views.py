@@ -1,8 +1,11 @@
 # yourapp/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate , logout
 from django.db import transaction
 from django.contrib import messages
+from products.views import product_list
+from django.contrib.auth.decorators import login_required
+
 from .forms import (
     BuyerSignUpForm, BuyerProfileForm,
     SellerSignUpForm, SellerProfileForm,
@@ -19,7 +22,7 @@ def buyer_signup(request):
                 profile.user = user
                 profile.save()
             login(request, user)
-            return redirect("home")  # change to your home route name
+            return redirect("product_list")  # change to your home route name
     else:
         user_form = BuyerSignUpForm()
         profile_form = BuyerProfileForm()
@@ -36,7 +39,7 @@ def seller_signup(request):
                 profile.user = user
                 profile.save()
             login(request, user)
-            return redirect("home")  # change to your seller dashboard route
+            return redirect("product_list")  # change to your seller dashboard route
     else:
         user_form = SellerSignUpForm()
         profile_form = SellerProfileForm()
@@ -52,11 +55,24 @@ def user_login(request):
         if user is not None:
             login(request,user)
             if user.role=='buyer':
-                return render(request,'dashboard.html')
+                return redirect("product_list")  
             elif user.role=='seller':
-                return render(request,'dashboard.html')
+                return redirect("product_list")
             else:
-                return redirect("home")
+                return redirect("product_list")
         else:
             messages.error(request,"Invalid username or password")
     return render(request, "login.html")
+
+def logoutUser(request):
+    logout(request)
+    return redirect("product_list")
+
+@login_required
+def profile(request):
+    user=request.user
+    if user.role=='buyer':
+        profile=user.buyerprofile
+    else:
+        profile=user.sellerprofile
+    return render(request,'profile.html',{"user":user,'profile':profile})
