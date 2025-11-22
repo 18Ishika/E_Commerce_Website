@@ -1,5 +1,5 @@
 # yourapp/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import login,authenticate , logout
 from django.db import transaction
 from django.contrib import messages
@@ -72,7 +72,12 @@ def logoutUser(request):
 def profile(request):
     user=request.user
     if user.role=='buyer':
-        profile=user.buyerprofile
-    else:
-        profile=user.sellerprofile
-    return render(request,'profile.html',{"user":user,'profile':profile})
+        profile=getattr(user, "buyer_profile", None)
+    elif user.role=='seller':
+        profile=getattr(user, "seller_profile", None)
+    
+    context = {
+        "user": user,
+        "profile": profile
+    }
+    return render(request,'profile.html',context)

@@ -1,5 +1,7 @@
-from django.shortcuts import render,get_object_or_404
-
+from django.shortcuts import render,get_object_or_404,redirect
+from .forms import ProductForm,ProductImageForm
+from .models import Product, ProductImage
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 from .models import Product
@@ -11,3 +13,38 @@ def product_list(request):
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import ProductForm, ProductImageForm
+from .models import ProductImage
+
+@login_required
+def add_product(request):
+    if request.user.role != "seller":   # to prevent buyers adding products
+        return redirect("product_list")
+
+    if request.method == "POST":
+        form = ProductForm(request.POST)
+        image_form = ProductImageForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = request.user
+            product.save()
+
+            # Save multiple images
+            images = request.FILES.getlist("images")
+            for img in images:
+                ProductImage.objects.create(product=product, image=img)
+
+            return redirect("product_list")   # after successful product upload
+
+    else:
+        form = ProductForm()
+        image_form = ProductImageForm()
+
+    return render(request, "products/add_product.html", {
+        "form": form,
+        "image_form": image_form
+    })

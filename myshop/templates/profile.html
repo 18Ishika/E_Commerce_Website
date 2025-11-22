@@ -1,26 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container mx-auto mt-12 bg-card-dark text-white p-8 rounded-xl shadow-xl max-w-2xl">
+<h2>{{ user.username }} ({{ user.role }})</h2>
+<p>Phone: {{ user.phone }}</p>
 
-    <h2 class="text-3xl font-extrabold text-accent-luxury mb-6 text-center">
-        My Profile
-    </h2>
+{% if user.role == "buyer" %}
+    <h3>Buyer Details</h3>
+    <p>Default Address: {{ profile.default_address }}</p>
+    <p>City: {{ profile.city }}</p>
+    <p>State: {{ profile.state }}</p>
+    <p>Pincode: {{ profile.pincode }}</p>
+{% endif %}
 
-    <p class="text-lg mb-4"><strong>Username:</strong> {{ user.username }}</p>
-    <p class="text-lg mb-4"><strong>Email:</strong> {{ user.email }}</p>
-    <p class="text-lg mb-4"><strong>Role:</strong> {{ user.role|title }}</p>
+{% if user.role == "seller" %}
+    <h3>Seller Details</h3>
+    <p>Shop Name: {{ profile.shop_name }}</p>
+    <p>Description: {{ profile.shop_description }}</p>
+    <p>GST: {{ profile.gst_number }}</p>
+    <p>Business Address: {{ profile.business_address }}</p>
+    <p>Rating: {{ profile.rating }}</p>
+    
+    <a href="{% url 'add_product' %}"
+   class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-5 py-2 rounded-xl border border-purple-400/40 shadow-md transition hover:scale-105">
+   ➕ Add Product
+</a>
 
-    {% if user.role == "buyer" %}
-        <p class="text-lg mb-4"><strong>City:</strong> {{ profile.city }}</p>
-        <p class="text-lg mb-4"><strong>Address:</strong> {{ profile.address }}</p>
-        <p class="text-lg mb-4"><strong>Phone:</strong> {{ profile.phone }}</p>
-    {% else %}
-        <p class="text-lg mb-4"><strong>Shop Name:</strong> {{ profile.shop_name }}</p>
-        <p class="text-lg mb-4"><strong>Business Address:</strong> {{ profile.business_address }}</p>
-        <p class="text-lg mb-4"><strong>Phone:</strong> {{ profile.phone }}</p>
-    {% endif %}
-
-</div>
+{% endif %}
 
 {% endblock %}
