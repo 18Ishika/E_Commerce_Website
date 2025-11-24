@@ -6,7 +6,9 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {% for p in products %}
-        <div class="bg-secondary-dark p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-[1.02] transition transform block">
+
+        <a href="{% if user.is_authenticated %}{% url 'product_detail' p.id %}{% else %}{% url 'login' %}?next={% url 'product_detail' p.id %}{% endif %}"
+           class="bg-secondary-dark p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-[1.02] transition transform block">
 
             <!-- Product Image -->
             {% if p.images.first %}
@@ -28,27 +30,21 @@
                 ⭐ {{ p.average_rating }} ({{ p.total_reviews }} reviews)
             </p>
 
-            <!-- Add to Cart Button -->
-            {% if user.is_authenticated %}
-                <a href="{% url 'product_detail' p.id %}"
-                   class="block text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg">
-                   Add to Cart
-                </a>
-            {% else %}
-                <a href="{% url 'login' %}?next={% url 'product_detail' p.id %}"
-                   class="block text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg">
-                   Add to Cart
-                </a>
-            {% endif %}
+            <!-- Add to Cart Button UI (same behavior as card click) -->
+            <div class="text-center">
+                <span class="inline-block bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg">
+                    Add to Cart
+                </span>
+            </div>
 
-        </div>
+        </a>
+
         {% endfor %}
     </div>
 
     {% if not products %}
     <p class="text-center text-gray-500 mt-10">No products available yet.</p>
     {% endif %}
-
 </div>
 
 {% endblock %}
