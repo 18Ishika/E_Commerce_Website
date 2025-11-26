@@ -16,7 +16,7 @@ class Cart(models.Model):
     def cart_total(self):
         return sum(item.total_price() for item in self.cart_products.all())
     def __str__(self):
-        return f"Car ({self.user.username})"
+        return f"Cart ({self.user.username})"
 
 
 class CartProduct(models.Model):
