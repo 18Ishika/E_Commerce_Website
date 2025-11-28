@@ -71,7 +71,9 @@ def logoutUser(request):
 @login_required
 def profile(request):
     user=request.user
-    if user.role=='buyer':
+    if user.is_superuser:
+        return redirect('/admin/')
+    elif user.role=='buyer':
         profile=getattr(user, "buyer_profile", None)
     elif user.role=='seller':
         profile=getattr(user, "seller_profile", None)
