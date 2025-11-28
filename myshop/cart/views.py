@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from djano.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 from .models import Cart, CartProduct
 from products.models import Product
@@ -53,5 +53,36 @@ def add_to_cart_view(request,product_id):
 
 @login_required
 def remove_from_cart(request,item_id):
-    item=get_object_or_404(CartProduct,id=item_id,cart_user=request.user)
-    
+    item=get_object_or_404(CartProduct,id=item_id,cart__user=request.user)
+    item.delete()
+    messages.info(request,"Item removed from the cart")
+    return redirect("cart_view")
+
+
+@login_required
+def increase_qty(request,item_id):
+    item=get_object_or_404(CartProduct,id=item_id,cart__user=request.user)
+    if item.product.stock<=item.quantity:
+        messages.error(request,"Cannot exceed available stock")
+        return redirect("cart_view")
+    item.quantity+=1
+    item.save()
+    return redirect("cart_view")
+
+@login_required
+def decrease_qty(request,item_id):
+    item=get_object_or_404(CartProduct,id=item_id,cart__user=request.user)
+    if item.quantity>1:
+        item.quantity-=1
+        item.save()
+    else:
+        item.delete()
+    return redirect("cart_view")
+
+@login_required
+def clear_cart(request):
+    cart=get_user_cart(request.user)
+    cart.cart_products.all().delete()
+    messages.warning(request,"Your cart has been cleared.")
+    return redirect("cart_view")
+   
