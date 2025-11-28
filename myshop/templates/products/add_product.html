@@ -1,9 +1,82 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ image_form.as_p }}
-    <button type="submit" class="btn btn-primary">Add Product</button>
-</form>
+
+<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
+
+    <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury border-b border-card-dark pb-3">
+        Create New Product Listing
+    </h2>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-8 bg-secondary-dark p-8 rounded-xl shadow-2xl">
+        {% csrf_token %}
+
+        <div>
+            <h3 class="text-2xl font-bold text-gray-100 pb-3 border-b border-card-dark mb-6">Product Details</h3>
+            
+            <div class="space-y-6">
+                {% for field in form %}
+                    <div class="flex flex-col">
+                        <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="text-sm text-red-400 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-bold text-gray-100 pb-3 border-b border-card-dark mb-6">Product Images</h3>
+            
+            <div class="space-y-6">
+                {% for field in image_form %}
+                    <div class="flex flex-col">
+                        <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="text-sm text-red-400 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="pt-6 border-t border-card-dark text-center">
+            <button type="submit" 
+                    class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-3 px-12 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.02]">
+                Add Product
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const standardClasses = "w-full p-3 rounded-lg border border-card-dark bg-primary-dark focus:ring-2 focus:ring-accent-luxury focus:border-accent-luxury transition duration-200 text-gray-200";
+
+        // Apply classes to all inputs, selects, and textareas within the form
+        document.querySelectorAll('form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), form select, form textarea').forEach(element => {
+            element.className = standardClasses;
+        });
+        
+        // Custom styling for file input (the image upload button)
+        document.querySelectorAll('form input[type="file"]').forEach(element => {
+             element.className = "w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition duration-200";
+        });
+    });
+</script>
+
 {% endblock %}

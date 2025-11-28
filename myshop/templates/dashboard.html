@@ -3,46 +3,85 @@
 
 {% block content %}
 
-<div class="container mx-auto mt-12">
+<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-    <h1 class="text-4xl font-bold text-accent-luxury mb-6">
-        Welcome, {{ request.user.username }} 👋
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-accent-luxury mb-2 tracking-wide">
+        Welcome Back, <span class="text-gray-100">{{ request.user.username }}</span>
     </h1>
+    <p class="text-gray-400 text-lg mb-10">Your personal hub for tracking your shopping activity. 👋</p>
 
-    <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
 
-        <div class="bg-secondary-dark p-6 rounded-xl shadow-lg border border-card-dark">
-            <h2 class="text-lg text-gray-400">Total Orders</h2>
-            <p class="text-3xl font-bold mt-2">12</p>
+        <div class="bg-card-dark p-6 rounded-xl shadow-xl border-l-4 border-accent-luxury transition duration-300 hover:scale-[1.01] hover:shadow-accent-luxury/30">
+            <h2 class="text-lg font-semibold text-gray-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-accent-luxury" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                Total Orders
+            </h2>
+            <p class="text-4xl font-black mt-3 text-gray-100">12</p>
+            <p class="text-sm text-gray-500 mt-1">View your complete history.</p>
         </div>
 
-        <div class="bg-secondary-dark p-6 rounded-xl shadow-lg border border-card-dark">
-            <h2 class="text-lg text-gray-400">Wishlist Items</h2>
-            <p class="text-3xl font-bold mt-2">4</p>
+        <div class="bg-card-dark p-6 rounded-xl shadow-xl border-l-4 border-red-500 transition duration-300 hover:scale-[1.01]">
+            <h2 class="text-lg font-semibold text-gray-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                Wishlist Items
+            </h2>
+            <p class="text-4xl font-black mt-3 text-gray-100">4</p>
+            <p class="text-sm text-gray-500 mt-1">Items you love, waiting for purchase.</p>
         </div>
 
-        <div class="bg-secondary-dark p-6 rounded-xl shadow-lg border border-card-dark">
-            <h2 class="text-lg text-gray-400">Cart Items</h2>
-            <p class="text-3xl font-bold mt-2">3</p>
+        <div class="bg-card-dark p-6 rounded-xl shadow-xl border-l-4 border-green-500 transition duration-300 hover:scale-[1.01]">
+            <h2 class="text-lg font-semibold text-gray-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                Cart Items
+            </h2>
+            <p class="text-4xl font-black mt-3 text-gray-100">3</p>
+            <p class="text-sm text-gray-500 mt-1">Ready to check out.</p>
         </div>
 
     </div>
 
-    <!-- Actions Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <a href="#" class="bg-card-dark p-6 rounded-xl border border-gray-700 hover:border-accent-luxury transition">
-            <h3 class="text-2xl font-semibold mb-2 text-accent-luxury">Browse Products</h3>
-            <p class="text-gray-400">Explore new arrivals and trending picks.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <a href="{% url 'product_list' %}" 
+           class="bg-accent-luxury/20 p-6 rounded-xl shadow-lg border border-accent-luxury hover:bg-accent-luxury/30 transition duration-300 transform hover:-translate-y-1">
+            <h3 class="text-2xl font-bold mb-2 text-accent-luxury flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.207 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.832 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.792 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.168 18 16.5 18s-3.332-.477-4.5-1.247" /></svg>
+                Start Shopping
+            </h3>
+            <p class="text-gray-300">Explore new arrivals and trending luxury items right now.</p>
         </a>
 
-        <a href="#" class="bg-card-dark p-6 rounded-xl border border-gray-700 hover:border-accent-luxury transition">
-            <h3 class="text-2xl font-semibold mb-2 text-accent-luxury">View Orders</h3>
-            <p class="text-gray-400">Track current and previous orders.</p>
+        <a href="{% url 'orders_list' %}" 
+           class="bg-card-dark p-6 rounded-xl shadow-lg border border-gray-700 hover:border-accent-hover transition duration-300">
+            <h3 class="text-2xl font-semibold mb-2 text-gray-200 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-accent-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                Track Orders
+            </h3>
+            <p class="text-gray-400">View current, previous, and pending order status.</p>
+        </a>
+
+        <a href="{% url 'wishlist_view' %}" 
+           class="bg-card-dark p-6 rounded-xl shadow-lg border border-gray-700 hover:border-accent-hover transition duration-300">
+            <h3 class="text-2xl font-semibold mb-2 text-gray-200 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-accent-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                My Wishlist
+            </h3>
+            <p class="text-gray-400">Review your saved items and move them to cart.</p>
         </a>
 
     </div>
+    
+    <div class="mt-12">
+        <h2 class="text-3xl font-bold text-gray-100 mb-6 border-b border-card-dark pb-2">Recent Activity</h2>
+        
+        <div class="bg-card-dark p-6 rounded-xl shadow-lg">
+            <p class="text-gray-400">You recently viewed **Luxury Watch Model X**.</p>
+            <p class="text-gray-400 mt-2">Your order #SZE1094 has been shipped.</p>
+            <p class="text-gray-500 text-sm mt-4">This section will show recent orders, viewed items, or account updates.</p>
+        </div>
+    </div>
+
 
 </div>
 

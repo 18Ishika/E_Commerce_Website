@@ -1,71 +1,166 @@
 {% extends "base.html" %}
+{% load static %} 
+
 {% block content %}
 
-<div class="container mx-auto py-10 px-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8 max-w-7xl">
 
-    <!-- LEFT: IMAGES -->
-    <div>
-        {% if product.images.first %}
-        <img id="mainImage"
-             src="{{ product.images.first.image.url }}"
-             class="product-image-main w-full h-[450px] object-cover rounded-xl shadow-lg mb-4">
-        {% else %}
-        <img id="mainImage"
-             src="https://via.placeholder.com/450"
-             class="product-image-main w-full h-[450px] object-cover rounded-xl shadow-lg mb-4">
-        {% endif %}
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
 
-        <div class="flex gap-4 mt-4">
-            {% for img in product.images.all %}
-            <img src="{{ img.image.url }}"
-                class="thumbnail w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent"
-                onclick="document.getElementById('mainImage').src='{{ img.image.url }}'; 
-                         document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active'));
-                         this.classList.add('active');">
+        <div class="lg:col-span-3">
+            
+            <div class="bg-card-dark p-3 rounded-xl shadow-2xl relative overflow-hidden">
+                {% if product.images.first %}
+                <img id="mainImage"
+                     src="{{ product.images.first.image.url }}"
+                     class="product-image-main w-full h-[550px] object-cover rounded-lg transition duration-500 ease-in-out">
+                {% else %}
+                <img id="mainImage"
+                     src="https://via.placeholder.com/800x550/303030/B8860B?text=PRODUCT+IMAGE"
+                     class="product-image-main w-full h-[550px] object-cover rounded-lg transition duration-500 ease-in-out">
+                {% endif %}
+            </div>
+
+            <div class="flex gap-4 mt-6 overflow-x-auto pb-2">
+                {% for img in product.images.all %}
+                <img src="{{ img.image.url }}"
+                    class="thumbnail flex-shrink-0 w-24 h-24 object-cover rounded-lg cursor-pointer border-2 border-transparent transition duration-200 hover:border-accent-hover active:scale-95"
+                    onclick="document.getElementById('mainImage').src='{{ img.image.url }}'; 
+                             document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active'));
+                             this.classList.add('active');">
+                {% empty %}
+                {# Placeholder for the first thumbnail if there are no images, for initial 'active' state #}
+                <div class="w-24 h-24 bg-card-dark rounded-lg flex items-center justify-center text-xs text-gray-500 border-2 border-accent-luxury/50">No Thumbnails</div>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+        <div class="lg:col-span-2 flex flex-col space-y-6">
+
+            <div class="pb-4 border-b border-card-dark">
+                <h1 class="text-5xl font-extrabold text-gray-50 mb-2 tracking-wide">{{ product.name }}</h1>
+                <p class="text-3xl font-black text-accent-luxury">₹{{ product.price }}</p>
+            </div>
+            
+            <div class="flex items-center justify-between bg-card-dark p-4 rounded-lg shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <span class="text-accent-luxury text-xl font-bold">★</span>
+                    <span class="text-xl font-semibold">{{ product.average_rating|default:"N/A" }}</span>
+                    <span class="text-gray-400 text-sm">({{ product.total_reviews }} reviews)</span>
+                </div>
+                
+                {% if product.stock > 0 %}
+                    <span class="text-green-400 font-bold tracking-wider uppercase">In Stock</span>
+                {% else %}
+                    <span class="text-red-500 font-bold tracking-wider uppercase">Out of Stock</span>
+                {% endif %}
+            </div>
+
+            <div class="text-gray-300 space-y-4">
+                <h3 class="text-xl font-semibold border-b border-card-dark pb-1">Description</h3>
+                <p class="leading-relaxed">{{ product.description }}</p>
+            </div>
+            
+            <div class="mt-auto">
+
+                {% if user.is_authenticated and user.role == "buyer" %}
+                
+                    {# USER IS LOGGED IN AND IS A BUYER: SHOW ACTUAL ADD TO CART FORM #}
+                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        
+                        <div class="flex items-center gap-4 mb-6">
+                            <label for="quantity" class="text-lg font-semibold text-gray-300">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock|default:10 }}"
+                                class="w-24 p-2 rounded-lg text-center font-bold border border-card-dark focus:border-accent-luxury">
+                        </div>
+
+                        <button type="submit"
+                                {% if product.stock <= 0 %} disabled {% endif %}
+                                class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01] disabled:bg-gray-700 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed">
+                            {% if product.stock > 0 %}
+                                <span class="flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                                    Add to Cart
+                                </span>
+                            {% else %}
+                                Out of Stock
+                            {% endif %}
+                        </button>
+                    </form>
+
+                {% else %}
+                
+                    {# USER IS LOGGED OUT OR IS A SELLER: SHOW LOGIN/VIEW DETAILS BUTTON #}
+                    {% comment %} 
+                        If not logged in, we construct the redirect URL: 
+                        /login/?next=/product/{{ product.id }} 
+                        This ensures the user comes back to this page after authentication.
+                    {% endcomment %}
+                    
+                    {% url 'product_detail' product.id as detail_url %}
+                    {% url 'login' as login_url %}
+                    
+                    {% with login_url|add:"?next="|add:detail_url as login_redirect %}
+
+                    {% if product.stock > 0 %}
+                        <a href="{{ login_redirect }}" 
+                           class="w-full inline-flex items-center justify-center bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+                            Log In to Add to Cart
+                        </a>
+                    {% else %}
+                         <button disabled
+                            class="w-full bg-gray-700 text-gray-400 font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-none cursor-not-allowed">
+                            Out of Stock
+                        </button>
+                    {% endif %}
+
+                    {% endwith %}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="mt-20 p-8 bg-secondary-dark rounded-xl shadow-xl">
+        <h2 class="text-3xl font-extrabold mb-8 text-accent-luxury border-b border-card-dark pb-3">
+            Customer Reviews ({{ product.total_reviews }})
+        </h2>
+
+        <div class="space-y-6">
+            {% for review in product.reviews.all %}
+            <div class="p-6 rounded-lg border border-card-dark/70 transition duration-300 hover:border-accent-luxury/50 hover:bg-card-dark/50">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-accent-luxury font-bold text-lg">
+                        {{ review.user.username }}
+                    </p>
+                    <span class="font-bold text-xl flex items-center text-accent-luxury">
+                        ★ {{ review.rating }}
+                    </span>
+                </div>
+                <p class="text-gray-300 leading-snug">{{ review.review_text }}</p>
+                <p class="text-gray-500 text-xs mt-3">Reviewed on {{ review.created_at|date:"M j, Y" }}</p>
+            </div>
+            {% empty %}
+            <p class="text-center text-gray-500 p-4">Be the first to review this exclusive item.</p>
             {% endfor %}
         </div>
     </div>
 
-    <!-- RIGHT: PRODUCT INFO -->
-    <div>
-        <h1 class="text-4xl font-bold mb-3">{{ product.name }}</h1>
-
-        <p class="text-accent-luxury text-3xl font-bold mb-4">₹{{ product.price }}</p>
-
-        <p class="mb-2 text-gray-400">⭐ {{ product.average_rating }} ({{ product.total_reviews }} reviews)</p>
-
-        <p class="mb-6">{{ product.description }}</p>
-
-        <p class="mb-4">
-            {% if product.stock > 0 %}
-                <span class="text-green-400 font-semibold">In stock ({{ product.stock }})</span>
-            {% else %}
-                <span class="text-red-500 font-semibold">Out of stock</span>
-            {% endif %}
-        </p>
-
-        <button class="w-full bg-accent-luxury hover:bg-yellow-700 text-black font-bold rounded-lg py-3 mt-4 transition">
-            Add to Cart
-        </button>
-    </div>
-
 </div>
 
-<!-- REVIEWS SECTION -->
-<div class="container mx-auto px-6 mt-12">
-    <h2 class="text-2xl font-bold mb-6">Customer Reviews</h2>
-
-    {% for review in product.reviews.all %}
-    <div class="bg-secondary-dark p-5 rounded-xl mb-4 shadow">
-        <p class="text-accent-luxury font-semibold mb-1">
-            {{ review.user.username }} • ⭐ {{ review.rating }}
-        </p>
-        <p class="text-gray-300">{{ review.review_text }}</p>
-        <p class="text-gray-500 text-sm mt-1">{{ review.created_at|date:"M j, Y" }}</p>
-    </div>
-    {% empty %}
-    <p class="text-gray-500">No reviews yet.</p>
-    {% endfor %}
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstThumbnail = document.querySelector('.thumbnail');
+        if (firstThumbnail) {
+            firstThumbnail.classList.add('active');
+        }
+    });
+</script>
 
 {% endblock %}

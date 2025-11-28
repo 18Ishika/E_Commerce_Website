@@ -1,70 +1,75 @@
 {% extends "base.html" %}
+{% load static %} 
+
 {% block content %}
 
-<div class="container mx-auto py-10 px-6">
-    <h2 class="text-3xl font-bold mb-8 text-accent-luxury">Latest Products</h2>
+<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury tracking-wider border-b border-card-dark pb-3">
+        Discover Our Collection
+    </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {% for p in products %}
 
-        {# --- 1. DETERMINE THE LINK TARGET FOR THE ENTIRE CARD --- #}
-        {# THESE LINES MUST BE ENCLOSED IN {% ... %} AND SHOULD NOT BE DISPLAYED #}
+        
         {% if user.is_authenticated and p.seller == user %}
             {% url 'edit_listing' p.id as card_link %} 
         {% else %}
-            {% if user.is_authenticated %}
-                {% url 'product_detail' p.id as card_link %}
-            {% else %}
-                {# NOTE: Django's 'url' tag cannot directly include the query parameters if using 'as' #}
-                {% url 'login' as login_url %}
-                {% url 'product_detail' p.id as detail_url %}
-                {% with login_url|add:"?next="|add:detail_url as card_link %}
-                {% endwith %}
-            {% endif %}
+            {% url 'product_detail' p.id as card_link %}
         {% endif %}
         
-        <a href="{{ card_link }}"
-           class="bg-secondary-dark p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-[1.02] transition transform block group">
+        {# --- CARD START --- #}
+        <div class="group relative flex flex-col h-full bg-card-dark rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-accent-luxury/20 transition duration-300 transform hover:-translate-y-1">
+            
+            <a href="{{ card_link }}" class="flex flex-col h-full">
 
-            {% if p.images.first %}
-            <img src="{{ p.images.first.image.url }}"
-                 class="w-full h-60 object-cover rounded-lg mb-4">
-            {% else %}
-            <img src="https://via.placeholder.com/300"
-                 class="w-full h-60 object-cover rounded-lg mb-4">
-            {% endif %}
+                {# IMAGE CONTAINER - Fixed Height #}
+                <div class="relative w-full h-80 overflow-hidden">
+                    {% if p.images.first %}
+                    <img src="{{ p.images.first.image.url }}"
+                         class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110 group-hover:opacity-90">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x500/1F1F1F/B8860B?text=No+Image"
+                         class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110">
+                    {% endif %}
 
-            <h3 class="text-xl font-semibold mb-1 group-hover:text-accent-luxury">{{ p.name }}</h3>
-            <p class="text-accent-luxury font-bold text-lg mb-2">₹{{ p.price }}</p>
-            <p class="text-sm text-gray-400 mb-3">
-                ⭐ {{ p.average_rating }} ({{ p.total_reviews }} reviews)
-            </p>
+                    {# PRICE TAG #}
+                    <div class="absolute top-4 left-4 bg-primary-dark/90 text-accent-luxury font-extrabold text-lg px-3 py-1 rounded-lg border border-accent-luxury/30 shadow-md backdrop-blur-sm">
+                        ₹{{ p.price }}
+                    </div>
+                </div>
 
-            {# --- 2. DETERMINE THE BUTTON TEXT AND COLOR (This logic is fine) --- #}
-                    <div class="text-center mt-3">
-            {% if user.is_authenticated and p.seller == user %}
-            <a href="{% url 'edit_product' p.id %}">
-                <span class="inline-flex items-center justify-center w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
-                    <i class="fas fa-edit mr-2"></i> Edit Listing
-                </span>
+                {# TEXT CONTENT #}
+                <div class="p-6 flex flex-col flex-grow">
+                    
+                    <h3 class="text-2xl font-bold text-gray-100 mb-2 leading-tight group-hover:text-accent-luxury transition-colors duration-300 line-clamp-2">
+                        {{ p.name }}
+                    </h3>
+
+                    {# RATING ROW #}
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-accent-luxury text-lg">
+                            {% if p.average_rating > 0 %}★{% else %}☆{% endif %}
+                        </span>
+                        <span class="text-gray-300 font-medium">{{ p.average_rating|floatformat:1|default:"N/A" }}</span>
+                        <span class="text-gray-500 text-sm">({{ p.total_reviews }} reviews)</span>
+                    </div>
+
+                    {# BUTTON #}
+                    <div class="mt-auto pt-4">
+                        <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+                            View Details
+                        </button>
+                    </div>
+
+                </div>
             </a>
-            {% else %}
-                <a href="{% url 'add_to_cart' p.id %}"
-                class="inline-flex items-center justify-center w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
-                    <i class="fas fa-cart-plus mr-2"></i> Add to Cart
-                </a>
-            {% endif %}
+            
         </div>
-
-
-        </a>
+        {# --- CARD END --- #}
 
         {% endfor %}
     </div>
-
-    {% if not products %}
-    <p class="text-center text-gray-500 mt-10">No products available yet.</p>
-    {% endif %}
 </div>
 
 {% endblock %}
