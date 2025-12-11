@@ -83,3 +83,28 @@ def profile(request):
         "profile": profile
     }
     return render(request,'profile.html',context)
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from products.models import Product
+from django.core.paginator import Paginator
+
+@login_required
+def manage_listings(request):
+
+    # Ensure only sellers can access this page
+    if request.user.role != "seller":
+        messages.error(request, "Only sellers can manage listings.")
+        return redirect("product_list")
+
+    # Fetch ONLY the products listed by this seller
+    seller_products = Product.objects.filter(seller=request.user).order_by("-created_at")
+
+    # Optional: Pagination → 10 items per page
+    paginator = Paginator(seller_products, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "manage_listings.html", {
+        "page_obj": page_obj,
+    })

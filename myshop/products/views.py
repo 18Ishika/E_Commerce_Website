@@ -13,7 +13,14 @@ def product_list(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'products/product_detail.html', {'product': product})
+    user_review = None
+    if request.user.is_authenticated:
+        user_review = product.reviews.filter(user=request.user).first()
+
+    return render(request, 'products/product_detail.html', {
+        'product': product,
+        'user_review': user_review
+    })
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -82,3 +89,44 @@ def edit_product(request, pk):
         "img_form": img_form,
         "product": product
     })
+
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Product, Review
+from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    # prevent duplicate reviews
+    if Review.objects.filter(product=product, user=request.user).exists():
+        return redirect('product_detail', product_id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+
+            # update product stats
+            reviews = product.reviews.all()
+            product.total_reviews = reviews.count()
+            product.average_rating = sum([r.rating for r in reviews]) / product.total_reviews
+            product.save()
+
+            return redirect('product_detail', product_id)
+
+    return redirect('product_detail', product_id)
+@login_required
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id, seller=request.user)
+
+    if request.method == "POST":
+        product.delete()
+        messages.success(request, "Product deleted successfully.")
+        return redirect("manage_listings")
+
+    return render(request, "products/delete_product.html", {"product": product})

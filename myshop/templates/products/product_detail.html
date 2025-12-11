@@ -64,69 +64,66 @@
             
             <div class="mt-auto">
 
-                {% if user.is_authenticated and user.role == "buyer" %}
-                
-                    {# USER IS LOGGED IN AND IS A BUYER: SHOW ACTUAL ADD TO CART FORM #}
-                    <form method="post" action="{% url 'add_to_cart' product.id %}">
-                        {% csrf_token %}
-                        
-                        <div class="flex items-center gap-4 mb-6">
-                            <label for="quantity" class="text-lg font-semibold text-gray-300">Quantity:</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock|default:10 }}"
-                                class="w-24 p-2 rounded-lg text-center font-bold border border-card-dark focus:border-accent-luxury">
-                        </div>
+    {% if user.is_authenticated %}
 
-                        <button type="submit"
-                                {% if product.stock <= 0 %} disabled {% endif %}
-                                class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01] disabled:bg-gray-700 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed">
-                            {% if product.stock > 0 %}
-                                <span class="flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                                    Add to Cart
-                                </span>
-                            {% else %}
-                                Out of Stock
-                            {% endif %}
-                        </button>
-                    </form>
+        {% if product.seller == user %}
+            <!-- SELLER VIEW -->
+            <p class="text-gray-400 mt-4">You cannot buy your own product.</p>
 
-                {% else %}
-                
-                    {# USER IS LOGGED OUT OR IS A SELLER: SHOW LOGIN/VIEW DETAILS BUTTON #}
-                    {% comment %} 
-                        If not logged in, we construct the redirect URL: 
-                        /login/?next=/product/{{ product.id }} 
-                        This ensures the user comes back to this page after authentication.
-                    {% endcomment %}
-                    
-                    {% url 'product_detail' product.id as detail_url %}
-                    {% url 'login' as login_url %}
-                    
-                    {% with login_url|add:"?next="|add:detail_url as login_redirect %}
+        {% else %}
+            <!-- LOGGED-IN BUYER VIEW (Show Add to Cart form) -->
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
 
+                <div class="flex items-center gap-4 mb-6">
+                    <label for="quantity" class="text-lg font-semibold text-gray-300">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock|default:10 }}"
+                        class="w-24 p-2 rounded-lg text-center font-bold border border-card-dark focus:border-accent-luxury">
+                </div>
+
+                <button type="submit"
+                        {% if product.stock <= 0 %} disabled {% endif %}
+                        class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01] disabled:bg-gray-700 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed">
                     {% if product.stock > 0 %}
-                        <a href="{{ login_redirect }}" 
-                           class="w-full inline-flex items-center justify-center bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-                            Log In to Add to Cart
-                        </a>
+                        <span class="flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            Add to Cart
+                        </span>
                     {% else %}
-                         <button disabled
-                            class="w-full bg-gray-700 text-gray-400 font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-none cursor-not-allowed">
-                            Out of Stock
-                        </button>
+                        Out of Stock
                     {% endif %}
+                </button>
+            </form>
 
-                    {% endwith %}
+        {% endif %}
 
-                {% endif %}
+    {% else %}
+        
+        <!-- NOT LOGGED IN: Show login button -->
+        {% url 'product_detail' product.id as detail_url %}
+        {% url 'login' as login_url %}
+        {% with login_url|add:"?next="|add:detail_url as login_redirect %}
 
-            </div>
+            {% if product.stock > 0 %}
+                <a href="{{ login_redirect }}" 
+                    class="w-full inline-flex items-center justify-center bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.01]">
+                    Log In to Add to Cart
+                </a>
+            {% else %}
+                <button disabled
+                    class="w-full bg-gray-700 text-gray-400 font-black rounded-lg py-4 transition duration-300 text-xl uppercase shadow-none cursor-not-allowed">
+                    Out of Stock
+                </button>
+            {% endif %}
 
-        </div>
+        {% endwith %}
 
-    </div>
-    
+    {% endif %}
+
+</div>
+
     <div class="mt-20 p-8 bg-secondary-dark rounded-xl shadow-xl">
         <h2 class="text-3xl font-extrabold mb-8 text-accent-luxury border-b border-card-dark pb-3">
             Customer Reviews ({{ product.total_reviews }})
@@ -153,7 +150,34 @@
     </div>
 
 </div>
+{% if user.is_authenticated %}
+{% if not user_review %}
+<div class="mt-12 p-8 bg-card-dark rounded-xl shadow-xl">
+    <h3 class="text-2xl font-bold mb-4 text-accent-luxury">Write a Review</h3>
 
+    <form method="post" action="{% url 'add_review' product.id %}" class="space-y-4">
+        {% csrf_token %}
+
+        <label class="block text-gray-300 font-semibold">Rating (1–5)</label>
+        <input type="number" name="rating" min="1" max="5" required 
+               class="p-3 w-32 rounded-lg bg-secondary-dark border border-accent-luxury text-gray-100">
+
+        <label class="block text-gray-300 font-semibold">Your Review</label>
+        <textarea name="review_text" rows="4" required
+                  class="w-full p-4 rounded-lg bg-secondary-dark border border-accent-luxury text-gray-100"></textarea>
+
+        <button type="submit"
+                class="px-6 py-3 bg-accent-luxury text-primary-dark font-bold rounded-lg">
+            Submit Review
+        </button>
+    </form>
+</div>
+
+{% else %}
+
+{% endif %}
+
+{% endif %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const firstThumbnail = document.querySelector('.thumbnail');

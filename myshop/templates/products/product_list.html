@@ -12,11 +12,9 @@
         {% for p in products %}
 
         
-        {% if user.is_authenticated and p.seller == user %}
-            {% url 'edit_product' p.id as card_link %} 
-        {% else %}
+        
             {% url 'product_detail' p.id as card_link %}
-        {% endif %}
+        
         
         {# --- CARD START --- #}
         <div class="group relative flex flex-col h-full bg-card-dark rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-accent-luxury/20 transition duration-300 transform hover:-translate-y-1">
@@ -56,19 +54,13 @@
                     </div>
 
                     {# BUTTON #}
-                    {% if user.is_authenticated and p.seller == user %}
-                        <div class="mt-auto pt-4">
-                        <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
-                            Edit Product
-                        </button>
-                    </div>
-                    {% else %}
+                    
                         <div class="mt-auto pt-4">
                         <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
                             View Details
                         </button>
                     </div>
-                    {% endif %}
+                    
                     
 
                 </div>
