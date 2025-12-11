@@ -1,74 +1,61 @@
 {% extends "base.html" %}
-{% load static %} 
+{% load static %}
 
 {% block content %}
 
 <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
     <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury tracking-wider border-b border-card-dark pb-3">
-        Discover Our Collection
+        {% if query %}
+            Search results for "{{ query }}"
+        {% else %}
+            Discover Our Collection
+        {% endif %}
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {% for p in products %}
-
-        
-        
             {% url 'product_detail' p.id as card_link %}
-        
-        
-        {# --- CARD START --- #}
-        <div class="group relative flex flex-col h-full bg-card-dark rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-accent-luxury/20 transition duration-300 transform hover:-translate-y-1">
-            
-            <a href="{{ card_link }}" class="flex flex-col h-full">
 
-                {# IMAGE CONTAINER - Fixed Height #}
-                <div class="relative w-full h-80 overflow-hidden">
-                    {% if p.images.first %}
-                    <img src="{{ p.images.first.image.url }}"
-                         class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110 group-hover:opacity-90">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x500/1F1F1F/B8860B?text=No+Image"
-                         class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110">
-                    {% endif %}
+            <div class="group relative flex flex-col h-full bg-card-dark rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-accent-luxury/20 transition duration-300 transform hover:-translate-y-1">
+                
+                <a href="{{ card_link }}" class="flex flex-col h-full">
+                    <div class="relative w-full h-80 overflow-hidden">
+                        {% if p.images.first %}
+                            <img src="{{ p.images.first.image.url }}"
+                                 class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110 group-hover:opacity-90">
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x500/1F1F1F/B8860B?text=No+Image"
+                                 class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110">
+                        {% endif %}
 
-                    {# PRICE TAG #}
-                    <div class="absolute top-4 left-4 bg-primary-dark/90 text-accent-luxury font-extrabold text-lg px-3 py-1 rounded-lg border border-accent-luxury/30 shadow-md backdrop-blur-sm">
-                        ₹{{ p.price }}
-                    </div>
-                </div>
-
-                {# TEXT CONTENT #}
-                <div class="p-6 flex flex-col flex-grow">
-                    
-                    <h3 class="text-2xl font-bold text-gray-100 mb-2 leading-tight group-hover:text-accent-luxury transition-colors duration-300 line-clamp-2">
-                        {{ p.name }}
-                    </h3>
-
-                    {# RATING ROW #}
-                    <div class="flex items-center space-x-2 mb-4">
-                        <span class="text-accent-luxury text-lg">
-                            {% if p.average_rating > 0 %}★{% else %}☆{% endif %}
-                        </span>
-                        <span class="text-gray-300 font-medium">{{ p.average_rating|floatformat:1|default:"N/A" }}</span>
-                        <span class="text-gray-500 text-sm">({{ p.total_reviews }} reviews)</span>
+                        <div class="absolute top-4 left-4 bg-primary-dark/90 text-accent-luxury font-extrabold text-lg px-3 py-1 rounded-lg border border-accent-luxury/30 shadow-md backdrop-blur-sm">
+                            ₹{{ p.price }}
+                        </div>
                     </div>
 
-                    {# BUTTON #}
-                    
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2 leading-tight group-hover:text-accent-luxury transition-colors duration-300 line-clamp-2">
+                            {{ p.name }}
+                        </h3>
+
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="text-accent-luxury text-lg">
+                                {% if p.average_rating > 0 %}★{% else %}☆{% endif %}
+                            </span>
+                            <span class="text-gray-300 font-medium">{{ p.average_rating|floatformat:1|default:"N/A" }}</span>
+                            <span class="text-gray-500 text-sm">({{ p.total_reviews }} reviews)</span>
+                        </div>
+
                         <div class="mt-auto pt-4">
-                        <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
-                            View Details
-                        </button>
+                            <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
+                                View Details
+                            </button>
+                        </div>
                     </div>
-                    
-                    
-
-                </div>
-            </a>
-            
-        </div>
-        {# --- CARD END --- #}
-
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-center text-gray-400 col-span-full mt-10">No products found.</p>
         {% endfor %}
     </div>
 </div>

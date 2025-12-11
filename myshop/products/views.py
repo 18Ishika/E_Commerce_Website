@@ -3,13 +3,31 @@ from .forms import ProductForm,ProductImageForm
 from .models import Product, ProductImage
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Product
+from django.db.models import Q  # for complex queries
+    
 # Create your views here.
 
 from .models import Product
 
 def product_list(request):
-    products = Product.objects.all().order_by('-created_at')
-    return render(request, 'products/product_list.html', {'products': products})
+    query = request.GET.get('q', '')
+    products=None
+    if query:
+        # Search in name, description, and category name
+        products = Product.objects.filter(
+            Q(name__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)
+        ).order_by("-created_at")
+
+    else:
+        products = Product.objects.all().order_by('-created_at')
+    return render(request, 'products/product_list.html', {
+        'products': products,
+        'query': query
+    })
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -130,3 +148,4 @@ def delete_product(request, product_id):
         return redirect("manage_listings")
 
     return render(request, "products/delete_product.html", {"product": product})
+
