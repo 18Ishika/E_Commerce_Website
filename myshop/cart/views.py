@@ -48,7 +48,7 @@ def add_to_cart_view(request,product_id):
         messages.error(request,error)
     else:
         messages.success(request,"Product added to cart")
-    return redirect("cart_view")
+    return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
 @login_required

@@ -28,6 +28,7 @@ urlpatterns = [
     # Product pages
     path("products/", include("products.urls")),
     path("cart/", include("cart.urls")),
+    path("payment/", include("payment.urls")),
 
     # Home page
     path("", product_list, name="product_list"),

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto py-10 text-gray-200">
+
+    <h1 class="text-3xl font-extrabold mb-8">Your Order History</h1>
+
+    {% if orders %}
+        {% for order in orders %}
+        
+        <div class="mb-8 p-6 bg-secondary-dark rounded-xl border border-gray-700 shadow-lg">
+
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Order #{{ order.id }}</h2>
+
+                <!-- Status Badge -->
+                {% if order.status == "SUCCESS" %}
+                    <span class="px-3 py-1 rounded-lg bg-green-500/20 text-green-400 font-bold">
+                        Payment Successful
+                    </span>
+                {% elif order.status == "FAILED" %}
+                    <span class="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 font-bold">
+                        Payment Failed
+                    </span>
+                {% else %}
+                    <span class="px-3 py-1 rounded-lg bg-yellow-500/20 text-yellow-300 font-bold">
+                        Pending
+                    </span>
+                {% endif %}
+            </div>
+
+            <p class="text-gray-400 text-sm mt-1">
+                {{ order.created_at|date:"M d, Y h:i A" }}
+            </p>
+
+            <div class="mt-5 space-y-4">
+
+                {% for item in order.items.all %}
+                <div class="flex items-center border-b border-gray-700 pb-4">
+
+                    <!-- Product Image -->
+                    <img src="{{ item.product.images.first.image.url }}" class="w-20 h-20 rounded-lg">
+                    <div class="ml-4 flex-1">
+                        <h3 class="text-lg font-semibold">{{ item.product.name }}</h3>
+                        <p class="text-gray-400">Qty: {{ item.quantity }}</p>
+                    </div>
+
+                    <div class="text-right font-semibold">
+                        ₹{{ item.price|floatformat:2 }}
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="text-right mt-5 text-xl font-bold text-accent-luxury">
+                Total: ₹{{ order.total_amount|floatformat:2 }}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <p class="text-gray-400 text-lg mt-6">You haven’t placed any orders yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto mt-20 bg-secondary-dark p-10 rounded-2xl shadow-xl border border-red-700">
+
+    <h2 class="text-4xl font-black text-red-500 mb-6 tracking-wide">Payment Failed ⚠️</h2>
+
+    <p class="text-gray-300 text-lg mb-3">Payment ID:</p>
+    <p class="text-xl font-bold text-white mb-6">{{ payment.payment_id }}</p>
+
+    <p class="text-gray-300 text-lg mb-2">Amount:</p>
+    <p class="text-3xl font-black text-accent-luxury mb-10">₹{{ payment.amount }}</p>
+
+    <div class="flex flex-col sm:flex-row gap-6">
+        <a href="{% url 'mock_payment' payment.payment_id %}"
+           class="w-full text-center bg-accent-luxury hover:bg-accent-hover text-primary-dark px-6 py-3 rounded-xl text-lg font-bold transition shadow-lg">
+            Retry Payment
+        </a>
+
+        <a href="{% url 'cart_view' %}"
+           class="w-full text-center bg-card-dark hover:bg-secondary-dark border border-accent-luxury px-6 py-3 rounded-xl text-lg font-semibold transition shadow-lg">
+            Back to Cart
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}
