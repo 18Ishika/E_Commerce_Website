@@ -14,7 +14,7 @@
                 </span>
             </h2>
             
-            {# Placeholder for Edit Profile Button (Assuming you have an edit_profile url) #}
+            {# Edit Profile Button #}
             <a href="#" 
                class="text-gray-400 hover:text-accent-hover transition duration-200 flex items-center text-sm font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,14 +55,14 @@
                 </div>
             </div>
             
-            {# Placeholder for Buyer History/Orders #}
-            <div class="text-center mt-8 p-6 bg-card-dark rounded-xl text-gray-400">
-                <a href="#" class="text-accent-luxury hover:text-accent-hover font-semibold">
+            
+
+        {% endif %}
+        <div class="text-center mt-8 p-6 bg-card-dark rounded-xl text-gray-400">
+                <a href="{% url 'order_history' %}" class="text-accent-luxury hover:text-accent-hover font-semibold">
                     View Order History →
                 </a>
             </div>
-
-        {% endif %}
 
         {% if user.role == "seller" %}
             
@@ -101,17 +101,19 @@
                     Add New Product
                 </a>
 
-                {# Placeholder for Manage Listings button #}
                 <a href="{% url 'manage_listings' %}"
                    class="inline-flex items-center bg-card-dark hover:bg-secondary-dark text-gray-200 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 text-base border border-card-dark/50">
                     Manage All Listings
                 </a>
+
+                {# ✅ New Manage Orders Button #}
+                <a href="{% url 'seller_orders' %}"
+                   class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 text-base">
+                    🛒 Manage Orders
+                </a>
             </div>
 
         {% endif %}
-        <a href="{% url 'order_history' %}" class="text-accent-luxury underline">
-    View Order History
-</a>
 
     </div>
 

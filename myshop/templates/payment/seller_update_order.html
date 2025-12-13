@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mx-auto py-10 max-w-3xl">
+    <h2 class="text-3xl font-bold mb-6">Update Order Status</h2>
+
+    <div class="bg-white shadow-lg rounded-lg p-6">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Order info -->
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Order ID</label>
+                <input type="text" class="w-full border rounded p-2 bg-gray-100" value="{{ order.id }}" disabled>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">User</label>
+                <input type="text" class="w-full border rounded p-2 bg-gray-100" value="{{ order.user.username }}" disabled>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Current Status</label>
+                <input type="text" class="w-full border rounded p-2 bg-gray-100" value="{{ order.get_current_status_display }}" disabled>
+            </div>
+
+            <!-- Status dropdown -->
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Update Status</label>
+                <select name="status" class="w-full border rounded p-2" required>
+                    <option value="">Select New Status</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+            </div>
+
+            <!-- Note -->
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Optional Note</label>
+                <textarea name="note" class="w-full border rounded p-2" rows="3"
+                    placeholder="Add shipment note or tracking details..."></textarea>
+            </div>
+
+            <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                Update Status
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

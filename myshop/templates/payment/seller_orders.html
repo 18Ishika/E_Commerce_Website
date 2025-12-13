@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto py-10">
+
+    <h1 class="text-3xl font-bold mb-6">Orders Received</h1>
+
+    {% if orders %}
+        <div class="space-y-6">
+            {% for order in orders %}
+            <div class="border p-5 rounded-lg shadow bg-white">
+
+                <div class="flex justify-between">
+                    <h2 class="text-xl font-semibold">Order #{{ order.id }}</h2>
+                    <span class="px-3 py-1 rounded text-white {% if order.current_status == 'DELIVERED' %}bg-green-600{% elif order.current_status == 'CANCELLED' %}bg-red-600{% else %}bg-blue-600{% endif %}">
+                        {{ order.get_current_status_display }}
+                    </span>
+                </div>
+
+                <p class="text-gray-600">Placed on: {{ order.created_at|date:"M d, Y h:i A" }}</p>
+
+                <h3 class="mt-4 font-semibold">Products:</h3>
+                <ul class="ml-4">
+                    {% for item in order.items.all %}
+                        {% if item.product.seller == request.user %}
+                        <li class="mt-2">
+                            <strong>{{ item.product_name }}</strong>  
+                            × {{ item.quantity }} — ₹{{ item.total }}
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <div class="mt-4">
+    {% if order.payment.status == "SUCCESS" %}
+        <a href="{% url 'update_order_status' order.id %}"
+           class="bg-black text-white px-4 py-2 rounded">
+           Update Status
+        </a>
+    {% else %}
+        <span class="text-sm text-gray-500 italic">
+            Payment not completed
+        </span>
+    {% endif %}
+</div>
+
+
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p class="text-gray-600 text-lg">No orders received yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

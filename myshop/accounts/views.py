@@ -5,6 +5,7 @@ from django.db import transaction
 from django.contrib import messages
 from products.views import product_list
 from django.contrib.auth.decorators import login_required
+from payment.models import Order
 
 from .forms import (
     BuyerSignUpForm, BuyerProfileForm,
@@ -107,4 +108,16 @@ def manage_listings(request):
 
     return render(request, "manage_listings.html", {
         "page_obj": page_obj,
+    })
+
+@login_required
+def seller_orders(request):
+    
+    seller_products = Product.objects.filter(seller=request.user)
+    orders = Order.objects.filter(
+        items__product__in=seller_products
+    ).distinct().order_by('-created_at')
+
+    return render(request, "payment/seller_orders.html", {
+        "orders": orders
     })

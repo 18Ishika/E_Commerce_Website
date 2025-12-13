@@ -1,68 +1,108 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mx-auto py-10 text-gray-200">
 
-    <h1 class="text-3xl font-extrabold mb-8">Your Order History</h1>
+<div class="container mx-auto py-10 px-4 max-w-5xl">
+
+    <h2 class="text-3xl font-bold mb-8 text-gray-100">Your Orders</h2>
 
     {% if orders %}
         {% for order in orders %}
-        
-        <div class="mb-8 p-6 bg-secondary-dark rounded-xl border border-gray-700 shadow-lg">
+        <div class="bg-gray-900/40 backdrop-blur-lg border border-gray-700 rounded-xl shadow-lg p-6 mb-8">
 
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-semibold">Order #{{ order.id }}</h2>
+            <!-- ORDER HEADER -->
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-accent-luxury">
+                    Order #{{ order.id }}
+                </h3>
+                <p class="text-sm text-gray-400">
+                    {{ order.created_at|date:"M d, Y • h:i A" }}
+                </p>
+            </div>
 
-                <!-- Status Badge -->
-                {% if order.status == "SUCCESS" %}
-                    <span class="px-3 py-1 rounded-lg bg-green-500/20 text-green-400 font-bold">
-                        Payment Successful
+            <!-- PAYMENT STATUS -->
+            <div class="mb-3">
+                <span class="text-gray-400 mr-2">Payment:</span>
+                {% if order.payment.status == "SUCCESS" %}
+                    <span class="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-lg">
+                        Successful
                     </span>
-                {% elif order.status == "FAILED" %}
-                    <span class="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 font-bold">
-                        Payment Failed
+                {% elif order.payment.status == "FAILED" %}
+                    <span class="px-3 py-1 bg-red-500/20 text-red-400 text-sm rounded-lg">
+                        Failed
                     </span>
                 {% else %}
-                    <span class="px-3 py-1 rounded-lg bg-yellow-500/20 text-yellow-300 font-bold">
+                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-sm rounded-lg">
                         Pending
                     </span>
                 {% endif %}
             </div>
 
-            <p class="text-gray-400 text-sm mt-1">
-                {{ order.created_at|date:"M d, Y h:i A" }}
-            </p>
+            <!-- CURRENT ORDER STATUS -->
+            <div class="mb-3">
+                <span class="text-gray-400 mr-2">Order Status:</span>
 
-            <div class="mt-5 space-y-4">
-
-                {% for item in order.items.all %}
-                <div class="flex items-center border-b border-gray-700 pb-4">
-
-                    <!-- Product Image -->
-                    <img src="{{ item.product.images.first.image.url }}" class="w-20 h-20 rounded-lg">
-                    <div class="ml-4 flex-1">
-                        <h3 class="text-lg font-semibold">{{ item.product.name }}</h3>
-                        <p class="text-gray-400">Qty: {{ item.quantity }}</p>
-                    </div>
-
-                    <div class="text-right font-semibold">
-                        ₹{{ item.price|floatformat:2 }}
-                    </div>
-                </div>
-                {% endfor %}
-
+                {% if order.current_status == "PAYMENT_SUCCESS" %}
+                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-sm rounded-lg">Payment Successful</span>
+                {% elif order.current_status == "SHIPPED" %}
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-sm rounded-lg">Shipped</span>
+                {% elif order.current_status == "OUT_FOR_DELIVERY" %}
+                    <span class="px-3 py-1 bg-orange-500/20 text-orange-400 text-sm rounded-lg">Out for Delivery</span>
+                {% elif order.current_status == "DELIVERED" %}
+                    <span class="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-lg">Delivered</span>
+                {% else %}
+                    <span class="px-3 py-1 bg-red-500/20 text-red-400 text-sm rounded-lg">Cancelled</span>
+                {% endif %}
             </div>
 
-            <div class="text-right mt-5 text-xl font-bold text-accent-luxury">
-                Total: ₹{{ order.total_amount|floatformat:2 }}
+            <!-- TRACKING ID -->
+            {% if order.tracking_id %}
+            <div class="mb-4">
+                <span class="text-gray-400 mr-2">Tracking ID:</span>
+                <span class="text-gray-200 font-medium">{{ order.tracking_id }}</span>
+            </div>
+            {% endif %}
+
+            <!-- ORDER ITEMS -->
+            <div class="border-t border-gray-700 pt-4 mt-4">
+                <h4 class="text-lg font-semibold text-gray-200 mb-3">Items</h4>
+
+                {% for item in order.items.all %}
+                <div class="flex items-center justify-between bg-gray-800/40 p-3 rounded-lg mb-2">
+                    <div>
+                        <p class="text-gray-200 font-medium">{{ item.product_name }}</p>
+                        <p class="text-gray-400 text-sm">Qty: {{ item.quantity }}</p>
+                    </div>
+                    <p class="text-gray-300 font-semibold">₹{{ item.total }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- STATUS TIMELINE -->
+            <div class="border-t border-gray-700 mt-6 pt-4">
+                <h4 class="text-lg font-semibold text-gray-200 mb-3">Status Timeline</h4>
+
+                {% for log in order.status_updates.all %}
+                <div class="mb-2 p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+                    <p class="text-accent-luxury font-medium">{{ log.get_status_display }}</p>
+                    <p class="text-gray-400 text-sm">{{ log.timestamp|date:"M d, Y h:i A" }}</p>
+                    {% if log.note %}
+                        <p class="text-gray-500 text-xs mt-1">Note: {{ log.note }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="text-gray-500 text-sm">No updates yet.</p>
+                {% endfor %}
             </div>
 
         </div>
         {% endfor %}
 
     {% else %}
-        <p class="text-gray-400 text-lg mt-6">You haven’t placed any orders yet.</p>
+        <p class="text-gray-400 text-center text-lg">You have no orders yet.</p>
     {% endif %}
 
 </div>
+
 {% endblock %}
