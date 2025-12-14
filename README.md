@@ -185,9 +185,12 @@ myshop/
 ---
 
 
-<img width="1361" height="663" alt="image" src="https://github.com/user-attachments/assets/2709b129-128a-48ec-86b7-37455ab0cdab" />
-<img width="1363" height="715" alt="Screenshot 2025-12-14 103247" src="https://github.com/user-attachments/assets/17343323-9b00-4f74-a925-4e7937b8e653" />
-<img width="1361" height="663" alt="Screenshot 2025-12-14 103308" src="https://github.com/user-attachments/assets/ac35d098-8c99-4ac5-a6ff-62f912b910c3" />
+29e4" />
+
+<img width="1360" height="702" alt="Screenshot 2025-12-14 103220" src="https://github.com/user-attachments/assets/3ae5de37-8335-40e4-80dc-6967d2609585" />
+<img width="1363" height="715" alt="Screenshot 2025-12-14 103247" src="https://github.com/user-attachments/assets/c9dff470-82bc-4f74-b229-322be5564e16" />
+
+<img width="1361" height="663" alt="Screenshot 2025-12-14 103308" src="https://github.com/user-attachments/assets/0479b998-aaeb-4255-9a81-c3826107f88e" />
 
 
 Working on adding RAG chatbot functionality to help you assist with the website.
