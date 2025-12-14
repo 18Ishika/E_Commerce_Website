@@ -121,3 +121,37 @@ def seller_orders(request):
     return render(request, "payment/seller_orders.html", {
         "orders": orders
     })
+@login_required
+def edit_profile(request):
+    user = request.user
+
+    if request.method == "POST":
+        # Update User fields
+        user.username = request.POST.get("username", user.username)
+        user.email = request.POST.get("email", user.email)
+        user.phone = request.POST.get("phone", user.phone)
+        user.save()
+
+        if user.role == "buyer":
+            profile = user.buyer_profile
+            profile.default_address = request.POST.get("default_address", profile.default_address)
+            profile.city = request.POST.get("city", profile.city)
+            profile.state = request.POST.get("state", profile.state)
+            profile.pincode = request.POST.get("pincode", profile.pincode)
+            profile.save()
+        elif user.role == "seller":
+            profile = user.seller_profile
+            profile.shop_name = request.POST.get("shop_name", profile.shop_name)
+            profile.shop_description = request.POST.get("shop_description", profile.shop_description)
+            profile.gst_number = request.POST.get("gst_number", profile.gst_number)
+            profile.business_address = request.POST.get("business_address", profile.business_address)
+            # Note: rating is not editable by seller
+            profile.save()
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect("edit_profile")
+
+    context = {
+        "user": user,
+    }
+    return render(request, "edit_profile.html", context)

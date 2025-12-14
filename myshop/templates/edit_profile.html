@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto py-12 px-4 max-w-3xl">
+    <h2 class="text-3xl font-bold text-accent-luxury mb-8">
+        Edit Profile
+    </h2>
+
+    <form method="POST" action="{% url 'edit_profile' %}" class="space-y-6 bg-secondary-dark/40 p-8 rounded-2xl shadow-xl">
+        {% csrf_token %}
+
+        <!-- Username & Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-gray-400 mb-1" for="username">Username</label>
+                <input type="text" name="username" id="username" value="{{ user.username }}"
+                       class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+            </div>
+            <div>
+                <label class="block text-gray-400 mb-1" for="email">Email</label>
+                <input type="email" name="email" id="email" value="{{ user.email }}"
+                       class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <label class="block text-gray-400 mb-1" for="phone">Phone</label>
+            <input type="text" name="phone" id="phone" value="{{ user.phone }}"
+                   class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+        </div>
+
+        {% if user.role == 'buyer' %}
+        <!-- Buyer Profile Fields -->
+        <div>
+            <label class="block text-gray-400 mb-1" for="default_address">Default Address</label>
+            <textarea name="default_address" id="default_address" rows="3"
+                      class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">{{ user.buyer_profile.default_address }}</textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-gray-400 mb-1" for="city">City</label>
+                <input type="text" name="city" id="city" value="{{ user.buyer_profile.city }}"
+                       class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+            </div>
+            <div>
+                <label class="block text-gray-400 mb-1" for="state">State</label>
+                <input type="text" name="state" id="state" value="{{ user.buyer_profile.state }}"
+                       class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+            </div>
+            <div>
+                <label class="block text-gray-400 mb-1" for="pincode">Pincode</label>
+                <input type="text" name="pincode" id="pincode" value="{{ user.buyer_profile.pincode }}"
+                       class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+            </div>
+        </div>
+        {% elif user.role == 'seller' %}
+        <!-- Seller Profile Fields -->
+        <div>
+            <label class="block text-gray-400 mb-1" for="shop_name">Shop Name</label>
+            <input type="text" name="shop_name" id="shop_name" value="{{ user.seller_profile.shop_name }}"
+                   class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+        </div>
+        <div>
+            <label class="block text-gray-400 mb-1" for="shop_description">Shop Description</label>
+            <textarea name="shop_description" id="shop_description" rows="3"
+                      class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">{{ user.seller_profile.shop_description }}</textarea>
+        </div>
+        <div>
+            <label class="block text-gray-400 mb-1" for="gst_number">GST Number</label>
+            <input type="text" name="gst_number" id="gst_number" value="{{ user.seller_profile.gst_number }}"
+                   class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">
+        </div>
+        <div>
+            <label class="block text-gray-400 mb-1" for="business_address">Business Address</label>
+            <textarea name="business_address" id="business_address" rows="3"
+                      class="w-full p-3 rounded-lg bg-card-dark text-gray-100 border border-card-dark focus:outline-none focus:ring-2 focus:ring-accent-luxury">{{ user.seller_profile.business_address }}</textarea>
+        </div>
+        {% endif %}
+
+        <button type="submit"
+                class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl transition shadow-lg">
+            Update Profile
+        </button>
+    </form>
+</div>
+{% endblock %}

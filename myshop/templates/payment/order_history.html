@@ -3,10 +3,10 @@
 
 {% block content %}
 
-<div class="container mx-auto py-12 px-4 max-w-6xl">
+<div class="container mx-auto py-16 px-6 max-w-6xl">
 
     <!-- PAGE HEADER -->
-    <div class="flex justify-between items-center mb-10">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
         <h2 class="text-4xl font-extrabold text-accent-luxury tracking-wide">
             Your Orders
         </h2>
@@ -17,10 +17,10 @@
 
     {% if orders %}
         {% for order in orders %}
-        <div class="relative bg-secondary-dark/40 backdrop-blur-xl border border-card-dark rounded-2xl shadow-2xl p-8 mb-10">
+        <div class="relative bg-secondary-dark/40 backdrop-blur-xl border border-card-dark rounded-2xl shadow-2xl p-8 mb-12 hover:shadow-3xl transition-shadow duration-300">
 
             <!-- ORDER HEADER -->
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
                 <div>
                     <h3 class="text-2xl font-bold text-gray-100">
                         Order #{{ order.id }}
@@ -31,33 +31,37 @@
                 </div>
 
                 <!-- ORDER STATUS BADGE -->
-                <div>
+                <div class="flex gap-2 flex-wrap">
                     {% if order.current_status == "DELIVERED" %}
-                        <span class="px-4 py-2 rounded-full bg-green-500/20 text-green-400 font-semibold text-sm">
+                        <span class="px-5 py-2 rounded-full bg-green-500/20 text-green-400 font-semibold text-sm">
                             Delivered
                         </span>
                     {% elif order.current_status == "SHIPPED" %}
-                        <span class="px-4 py-2 rounded-full bg-purple-500/20 text-purple-400 font-semibold text-sm">
+                        <span class="px-5 py-2 rounded-full bg-purple-500/20 text-purple-400 font-semibold text-sm">
                             Shipped
                         </span>
                     {% elif order.current_status == "OUT_FOR_DELIVERY" %}
-                        <span class="px-4 py-2 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm">
+                        <span class="px-5 py-2 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm">
                             Out for Delivery
                         </span>
-                    {% elif order.current_status == "PAYMENT_SUCCESS" %}
-                        <span class="px-4 py-2 rounded-full bg-blue-500/20 text-blue-400 font-semibold text-sm">
+                    {% elif order.payment.status == "SUCCESS" %}
+                        <span class="px-5 py-2 rounded-full bg-blue-500/20 text-blue-400 font-semibold text-sm">
                             Payment Successful
                         </span>
+                    {% elif order.payment.status == "FAILED" %}
+                        <span class="px-5 py-2 rounded-full bg-red-500/20 text-red-400 font-semibold text-sm">
+                            Payment Failed
+                        </span>
                     {% else %}
-                        <span class="px-4 py-2 rounded-full bg-red-500/20 text-red-400 font-semibold text-sm">
-                            Cancelled
+                        <span class="px-5 py-2 rounded-full bg-yellow-500/20 text-yellow-400 font-semibold text-sm">
+                            Payment Pending
                         </span>
                     {% endif %}
                 </div>
             </div>
 
             <!-- PAYMENT + TRACKING -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 <div>
                     <p class="text-gray-400 text-sm mb-1">Payment Status</p>
                     {% if order.payment.status == "SUCCESS" %}
@@ -78,15 +82,15 @@
             </div>
 
             <!-- ORDER ITEMS -->
-            <div class="border-t border-card-dark pt-6">
-                <h4 class="text-lg font-bold text-gray-200 mb-4">Order Items</h4>
+            <div class="border-t border-card-dark pt-8">
+                <h4 class="text-lg font-bold text-gray-200 mb-5">Order Items</h4>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     {% for item in order.items.all %}
-                    <div class="flex justify-between items-center bg-card-dark/60 p-4 rounded-xl">
+                    <div class="flex justify-between items-center bg-card-dark/60 p-5 rounded-xl hover:bg-card-dark/80 transition-colors duration-200">
                         <div>
                             <p class="text-gray-100 font-medium">{{ item.product_name }}</p>
-                            <p class="text-gray-400 text-sm">Quantity: {{ item.quantity }}</p>
+                            <p class="text-gray-400 text-sm mt-1">Quantity: {{ item.quantity }}</p>
                         </div>
                         <p class="text-accent-luxury font-bold text-lg">
                             ₹{{ item.total }}
@@ -97,12 +101,12 @@
             </div>
 
             <!-- STATUS TIMELINE -->
-            <div class="border-t border-card-dark mt-8 pt-6">
-                <h4 class="text-lg font-bold text-gray-200 mb-4">Order Timeline</h4>
+            <div class="border-t border-card-dark mt-10 pt-8">
+                <h4 class="text-lg font-bold text-gray-200 mb-5">Order Timeline</h4>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     {% for log in order.status_updates.all %}
-                    <div class="relative pl-6 pb-4 border-l border-accent-luxury/30">
+                    <div class="relative pl-6 pb-5 border-l border-accent-luxury/30">
                         <span class="absolute left-[-6px] top-1 w-3 h-3 rounded-full bg-accent-luxury"></span>
 
                         <p class="text-accent-luxury font-semibold">
@@ -127,15 +131,15 @@
         {% endfor %}
 
     {% else %}
-        <div class="text-center py-20 bg-secondary-dark rounded-2xl shadow-xl">
-            <h3 class="text-3xl font-bold text-accent-luxury mb-3">
+        <div class="text-center py-24 bg-secondary-dark rounded-2xl shadow-xl">
+            <h3 class="text-3xl font-bold text-accent-luxury mb-4">
                 No Orders Yet
             </h3>
-            <p class="text-gray-400 mb-6">
+            <p class="text-gray-400 mb-8">
                 Looks like you haven’t placed any orders yet.
             </p>
             <a href="{% url 'product_list' %}"
-               class="inline-block bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black px-8 py-3 rounded-xl transition shadow-lg">
+               class="inline-block bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black px-10 py-4 rounded-xl transition shadow-lg">
                 Start Shopping
             </a>
         </div>

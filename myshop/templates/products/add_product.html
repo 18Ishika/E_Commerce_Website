@@ -52,23 +52,16 @@
         <span class="text-xs uppercase tracking-wider text-gray-400">Optional</span>
       </div>
 
-      <div class="space-y-6">
-        {% for field in image_form %}
-        <div class="space-y-2">
-          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-300">
-            {{ field.label }}
-          </label>
-          {{ field }}
-          {% if field.help_text %}
-            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
-          {% endif %}
-          {% for error in field.errors %}
-            <p class="text-xs text-red-400">{{ error }}</p>
-          {% endfor %}
-        </div>
-        {% endfor %}
-      </div>
-
+      <div class="space-y-2">
+  <label for="id_images" class="text-sm font-semibold text-gray-300">
+    Product Images
+  </label>
+  <input type="file" name="images" id="id_images" multiple
+         class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition">
+  {% for error in image_form.images.errors %}
+    <p class="text-xs text-red-400">{{ error }}</p>
+  {% endfor %}
+</div>
       <div class="mt-4 bg-card-dark/60 p-4 rounded-xl text-sm text-gray-400">
         Tip: Use at least one clear, well-lit image to improve buyer engagement.
       </div>
