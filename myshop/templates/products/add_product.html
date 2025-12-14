@@ -3,80 +3,101 @@
 
 {% block content %}
 
-<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
+<div class="container mx-auto py-14 px-4 sm:px-6 lg:px-8 max-w-4xl">
 
-    <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury border-b border-card-dark pb-3">
-        Create New Product Listing
+  <!-- HEADER -->
+  <div class="mb-12">
+    <h2 class="text-4xl font-extrabold text-accent-luxury tracking-wide">
+      Create New Product
     </h2>
+    <p class="mt-2 text-gray-400">
+      Add a new item to your Shopzy store. Make sure details are accurate and images are high quality.
+    </p>
+  </div>
 
-    <form method="post" enctype="multipart/form-data" class="space-y-8 bg-secondary-dark p-8 rounded-xl shadow-2xl">
-        {% csrf_token %}
+  <!-- FORM CARD -->
+  <form method="post" enctype="multipart/form-data"
+        class="space-y-10 bg-secondary-dark p-10 rounded-2xl shadow-2xl">
+    {% csrf_token %}
 
-        <div>
-            <h3 class="text-2xl font-bold text-gray-100 pb-3 border-b border-card-dark mb-6">Product Details</h3>
-            
-            <div class="space-y-6">
-                {% for field in form %}
-                    <div class="flex flex-col">
-                        <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
-                            {{ field.label }}
-                        </label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <p class="text-sm text-red-400 mt-1">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- PRODUCT DETAILS -->
+    <section>
+      <div class="flex items-center justify-between border-b border-card-dark pb-3 mb-8">
+        <h3 class="text-2xl font-bold text-gray-100">Product Details</h3>
+        <span class="text-xs uppercase tracking-wider text-gray-400">Required</span>
+      </div>
 
-        <div>
-            <h3 class="text-2xl font-bold text-gray-100 pb-3 border-b border-card-dark mb-6">Product Images</h3>
-            
-            <div class="space-y-6">
-                {% for field in image_form %}
-                    <div class="flex flex-col">
-                        <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
-                            {{ field.label }}
-                        </label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <p class="text-sm text-red-400 mt-1">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
+      <div class="space-y-6">
+        {% for field in form %}
+        <div class="space-y-2">
+          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-300">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-400">{{ error }}</p>
+          {% endfor %}
         </div>
-        
-        <div class="pt-6 border-t border-card-dark text-center">
-            <button type="submit" 
-                    class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-3 px-12 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.02]">
-                Add Product
-            </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- PRODUCT IMAGES -->
+    <section>
+      <div class="flex items-center justify-between border-b border-card-dark pb-3 mb-8">
+        <h3 class="text-2xl font-bold text-gray-100">Product Images</h3>
+        <span class="text-xs uppercase tracking-wider text-gray-400">Optional</span>
+      </div>
+
+      <div class="space-y-6">
+        {% for field in image_form %}
+        <div class="space-y-2">
+          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-300">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-400">{{ error }}</p>
+          {% endfor %}
         </div>
-    </form>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4 bg-card-dark/60 p-4 rounded-xl text-sm text-gray-400">
+        Tip: Use at least one clear, well-lit image to improve buyer engagement.
+      </div>
+    </section>
+
+    <!-- ACTION BAR -->
+    <div class="pt-8 border-t border-card-dark flex items-center justify-between gap-6">
+      <a href="{% url 'profile' %}" class="text-gray-400 hover:text-gray-200 transition">
+        ← Back to Dashboard
+      </a>
+      <button type="submit"
+        class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-xl py-4 px-14 transition duration-300 text-xl uppercase shadow-2xl hover:scale-[1.03]">
+        Add Product
+      </button>
+    </div>
+  </form>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const standardClasses = "w-full p-3 rounded-lg border border-card-dark bg-primary-dark focus:ring-2 focus:ring-accent-luxury focus:border-accent-luxury transition duration-200 text-gray-200";
+document.addEventListener('DOMContentLoaded', () => {
+  const baseInput = "w-full p-3 rounded-lg border border-card-dark bg-primary-dark text-gray-200 focus:ring-2 focus:ring-accent-luxury focus:border-accent-luxury transition";
 
-        // Apply classes to all inputs, selects, and textareas within the form
-        document.querySelectorAll('form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), form select, form textarea').forEach(element => {
-            element.className = standardClasses;
-        });
-        
-        // Custom styling for file input (the image upload button)
-        document.querySelectorAll('form input[type="file"]').forEach(element => {
-             element.className = "w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition duration-200";
-        });
-    });
+  document.querySelectorAll('form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), form select, form textarea')
+    .forEach(el => el.className = baseInput);
+
+  document.querySelectorAll('form input[type="file"]').forEach(el => {
+    el.className = "w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition";
+  });
+});
 </script>
 
 {% endblock %}

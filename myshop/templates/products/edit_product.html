@@ -3,116 +3,129 @@
 
 {% block content %}
 
-<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="container mx-auto py-14 px-4 sm:px-6 lg:px-8 max-w-7xl">
 
-    <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury border-b border-card-dark pb-3">
-        Edit Product: <span class="text-gray-100">{{ product.name }}</span>
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-12">
+    <h2 class="text-4xl font-extrabold text-accent-luxury tracking-wide">
+      Edit Product
+      <span class="block text-lg font-medium text-gray-400 mt-1">{{ product.name }}</span>
     </h2>
+    <a href="{% url 'product_detail' product.id %}"
+       class="text-sm uppercase tracking-wider text-accent-luxury hover:text-accent-hover transition">
+      View Product →
+    </a>
+  </div>
 
-    <form method="POST" enctype="multipart/form-data" class="space-y-10">
-        {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data" class="space-y-12">
+    {% csrf_token %}
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 bg-secondary-dark p-8 rounded-xl shadow-2xl">
+    <!-- MAIN CARD -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 bg-secondary-dark p-10 rounded-2xl shadow-2xl">
 
-            <div class="lg:col-span-2 space-y-6">
-                <h3 class="text-2xl font-bold text-accent-hover pb-2 border-b border-card-dark">Product Details</h3>
-                
-                {# Render the main product form fields with custom styling #}
-                {% for field in form %}
-                <div class="flex flex-col">
-                    <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
-                        {{ field.label }}
-                    </label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <p class="text-sm text-red-400 mt-1">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-                
-            </div>
-
-            <div class="lg:col-span-1 space-y-6 border-l border-card-dark/50 lg:pl-6">
-                <h3 class="text-2xl font-bold text-accent-hover pb-2 border-b border-card-dark">Upload New Images</h3>
-                
-                {# Render the image form fields with custom styling #}
-                {% for field in img_form %}
-                <div class="flex flex-col">
-                    <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-300">
-                        {{ field.label }}
-                    </label>
-                    {# Apply styling to the input field itself, relying on the base CSS for input, select, textarea #}
-                    {{ field }}
-                    {% if field.help_text %}
-                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <p class="text-sm text-red-400 mt-1">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-            </div>
-
+      <!-- PRODUCT FIELDS -->
+      <div class="lg:col-span-2 space-y-8">
+        <div class="flex items-center justify-between border-b border-card-dark pb-3">
+          <h3 class="text-2xl font-bold text-gray-100">Product Information</h3>
+          <span class="text-xs uppercase tracking-wider text-gray-400">Required</span>
         </div>
 
-        <div class="text-center pt-6">
-            <button type="submit" 
-                    class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-lg py-3 px-12 transition duration-300 text-xl uppercase shadow-2xl transform hover:scale-[1.02]">
-                Save Changes
-            </button>
+        {% for field in form %}
+        <div class="space-y-2">
+          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-300">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-400">{{ error }}</p>
+          {% endfor %}
         </div>
+        {% endfor %}
+      </div>
 
-    </form>
+      <!-- IMAGE UPLOAD -->
+      <div class="lg:col-span-1 space-y-8 lg:border-l lg:border-card-dark/50 lg:pl-8">
+        <h3 class="text-2xl font-bold text-gray-100 border-b border-card-dark pb-3">
+          Product Images
+        </h3>
 
-    <div class="mt-16 pt-8 border-t border-card-dark">
-        <h3 class="text-2xl font-bold mb-6 text-gray-100">Existing Images</h3>
-        
-        <div class="flex gap-6 flex-wrap">
-            {% for img in product.images.all %}
-                <div class="relative group bg-card-dark p-2 rounded-lg shadow-lg border border-card-dark hover:border-accent-luxury/50 transition duration-300">
-                    <img src="{{ img.image.url }}" 
-                         alt="{{ product.name }} image {{ forloop.counter }}"
-                         class="h-28 w-28 object-cover rounded-md">
-                    
-                    {# Delete Button Placeholder (Requires specific URL and method in Django view) #}
-                    {# Assuming a URL 'delete_image' that takes the image ID #}
-                    <a href="#" 
-                       class="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 
-                              bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 
-                              hover:bg-red-500 transition duration-200 shadow-md"
-                       title="Remove Image">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </a>
-                </div>
-            {% empty %}
-                <p class="text-gray-500 p-4 bg-card-dark rounded-lg">No images uploaded for this product.</p>
-            {% endfor %}
+        {% for field in img_form %}
+        <div class="space-y-2">
+          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-300">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-400">{{ error }}</p>
+          {% endfor %}
         </div>
+        {% endfor %}
+
+        <div class="bg-card-dark/60 p-4 rounded-xl text-sm text-gray-400">
+          Tip: Upload high-resolution images for better visibility and conversions.
+        </div>
+      </div>
+
     </div>
+
+    <!-- ACTION BAR -->
+    <div class="flex items-center justify-between gap-6">
+      <a href="{% url 'dashboard' %}" class="text-gray-400 hover:text-gray-200 transition">
+        ← Back to Dashboard
+      </a>
+      <button type="submit"
+        class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black rounded-xl py-4 px-14 transition duration-300 text-xl uppercase shadow-2xl hover:scale-[1.03]">
+        Save Changes
+      </button>
+    </div>
+  </form>
+
+  <!-- EXISTING IMAGES -->
+  <div class="mt-20">
+    <h3 class="text-2xl font-bold mb-8 text-gray-100">Existing Images</h3>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      {% for img in product.images.all %}
+      <div class="relative group rounded-xl overflow-hidden bg-card-dark shadow-lg">
+        <img src="{{ img.image.url }}"
+             alt="{{ product.name }} image {{ forloop.counter }}"
+             class="w-full h-32 object-cover transition duration-300 group-hover:scale-110" />
+
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition"></div>
+
+        <a href="#"
+           title="Remove Image"
+           class="absolute top-3 right-3 bg-red-600 hover:bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </a>
+      </div>
+      {% empty %}
+      <p class="text-gray-500 bg-card-dark p-6 rounded-xl">No images uploaded yet.</p>
+      {% endfor %}
+    </div>
+  </div>
 
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const standardClasses = "w-full p-3 rounded-lg border border-card-dark bg-primary-dark focus:ring-2 focus:ring-accent-luxury focus:border-accent-luxury transition duration-200 text-gray-200";
+document.addEventListener('DOMContentLoaded', () => {
+  const baseInput = "w-full p-3 rounded-lg border border-card-dark bg-primary-dark text-gray-200 focus:ring-2 focus:ring-accent-luxury focus:border-accent-luxury transition";
 
-        // Apply classes to all inputs, selects, and textareas within the form
-        document.querySelectorAll('form input:not([type="checkbox"]):not([type="radio"]), form select, form textarea').forEach(element => {
-            element.className = standardClasses;
-        });
-        
-        // Handle Django's File Input separately if needed (it often requires different styling)
-        document.querySelectorAll('form input[type="file"]').forEach(element => {
-             // File inputs are tricky; we often rely on browser default or custom components.
-             // Here, we just ensure it gets basic text color from the base CSS.
-             element.className = "w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition duration-200";
-        });
-    });
+  document.querySelectorAll('form input:not([type="checkbox"]):not([type="radio"]), form select, form textarea')
+    .forEach(el => el.className = baseInput);
+
+  document.querySelectorAll('form input[type="file"]').forEach(el => {
+    el.className = "w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-luxury file:text-primary-dark hover:file:bg-accent-hover transition";
+  });
+});
 </script>
 
 {% endblock %}

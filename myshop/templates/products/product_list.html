@@ -3,61 +3,79 @@
 
 {% block content %}
 
-<div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <h2 class="text-4xl font-extrabold mb-10 text-accent-luxury tracking-wider border-b border-card-dark pb-3">
-        {% if query %}
-            Search results for "{{ query }}"
-        {% else %}
-            Discover Our Collection
-        {% endif %}
-    </h2>
+<div class="max-w-7xl mx-auto px-4 py-14">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <!-- PAGE TITLE -->
+    <div class="mb-12">
+        <h2 class="text-4xl sm:text-5xl font-extrabold text-accent-luxury tracking-wider border-b border-card-dark pb-4">
+            {% if query %}
+                Results for “{{ query }}”
+            {% else %}
+                Explore Shopzy Collection
+            {% endif %}
+        </h2>
+        <p class="text-gray-400 mt-3">Curated products crafted for a premium shopping experience</p>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         {% for p in products %}
             {% url 'product_detail' p.id as card_link %}
 
-            <div class="group relative flex flex-col h-full bg-card-dark rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-accent-luxury/20 transition duration-300 transform hover:-translate-y-1">
-                
-                <a href="{{ card_link }}" class="flex flex-col h-full">
-                    <div class="relative w-full h-80 overflow-hidden">
-                        {% if p.images.first %}
-                            <img src="{{ p.images.first.image.url }}"
-                                 class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110 group-hover:opacity-90">
-                        {% else %}
-                            <img src="https://via.placeholder.com/400x500/1F1F1F/B8860B?text=No+Image"
-                                 class="w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-110">
-                        {% endif %}
+            <div class="group relative bg-card-dark rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-accent-luxury/20 transition-all duration-300 transform hover:-translate-y-2">
 
-                        <div class="absolute top-4 left-4 bg-primary-dark/90 text-accent-luxury font-extrabold text-lg px-3 py-1 rounded-lg border border-accent-luxury/30 shadow-md backdrop-blur-sm">
-                            ₹{{ p.price }}
-                        </div>
+                <!-- IMAGE -->
+                <a href="{{ card_link }}" class="block relative h-[22rem] overflow-hidden">
+                    {% if p.images.first %}
+                        <img src="{{ p.images.first.image.url }}"
+                             alt="{{ p.name }}"
+                             class="w-full h-full object-cover transition duration-700 ease-out group-hover:scale-110">
+                    {% else %}
+                        <img src="https://via.placeholder.com/400x500/1F1F1F/C9A227?text=Shopzy"
+                             class="w-full h-full object-cover">
+                    {% endif %}
+
+                    <!-- PRICE TAG -->
+                    <div class="absolute top-4 left-4 bg-primary-dark/80 backdrop-blur px-4 py-1.5 rounded-xl border border-accent-luxury/40 text-accent-luxury font-bold tracking-wide shadow">
+                        ₹ {{ p.price }}
                     </div>
 
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-2xl font-bold text-gray-100 mb-2 leading-tight group-hover:text-accent-luxury transition-colors duration-300 line-clamp-2">
-                            {{ p.name }}
-                        </h3>
-
-                        <div class="flex items-center space-x-2 mb-4">
-                            <span class="text-accent-luxury text-lg">
-                                {% if p.average_rating > 0 %}★{% else %}☆{% endif %}
-                            </span>
-                            <span class="text-gray-300 font-medium">{{ p.average_rating|floatformat:1|default:"N/A" }}</span>
-                            <span class="text-gray-500 text-sm">({{ p.total_reviews }} reviews)</span>
-                        </div>
-
-                        <div class="mt-auto pt-4">
-                            <button class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-wider text-sm transition-all duration-200 shadow-md hover:shadow-lg">
-                                View Details
-                            </button>
-                        </div>
+                    <!-- QUICK ACTION -->
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-end justify-center pb-6">
+                        <span class="bg-accent-luxury text-primary-dark px-6 py-2 rounded-xl font-bold uppercase text-sm tracking-wider shadow-xl">
+                            View Product
+                        </span>
                     </div>
                 </a>
+
+                <!-- CONTENT -->
+                <div class="p-6 flex flex-col h-full">
+                    <h3 class="text-xl font-bold text-gray-100 leading-snug group-hover:text-accent-luxury transition line-clamp-2">
+                        {{ p.name }}
+                    </h3>
+
+                    <!-- RATING -->
+                    <div class="flex items-center gap-2 mt-3">
+                        <span class="text-accent-luxury text-lg">★</span>
+                        <span class="text-gray-200 font-semibold">{{ p.average_rating|floatformat:1|default:"N/A" }}</span>
+                        <span class="text-gray-500 text-sm">({{ p.total_reviews }} reviews)</span>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="mt-auto pt-6">
+                        <a href="{{ card_link }}" class="block w-full text-center bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl uppercase tracking-widest text-sm transition shadow-lg hover:shadow-xl">
+                            View Details
+                        </a>
+                    </div>
+                </div>
             </div>
         {% empty %}
-            <p class="text-center text-gray-400 col-span-full mt-10">No products found.</p>
+            <div class="col-span-full text-center py-20">
+                <p class="text-xl text-gray-400">No products found</p>
+            </div>
         {% endfor %}
     </div>
+
 </div>
 
 {% endblock %}

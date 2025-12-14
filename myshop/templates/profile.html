@@ -53,13 +53,13 @@
                 </div>
             </div>
         </div>
-
+        {% endif %}
         <div class="bg-secondary-dark/40 border border-card-dark rounded-xl p-6 text-center">
             <a href="{% url 'order_history' %}" class="text-accent-luxury hover:text-accent-hover font-bold tracking-wide">
                 View Order History →
             </a>
         </div>
-        {% endif %}
+        
 
         <!-- SELLER SECTION -->
         {% if user.role == "seller" %}

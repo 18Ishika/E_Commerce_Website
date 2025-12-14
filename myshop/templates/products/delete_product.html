@@ -2,34 +2,60 @@
 {% load static %}
 
 {% block content %}
-<div class="container" style="max-width: 600px; margin-top: 40px;">
 
-    <h2 class="mb-4 text-danger">Delete Product</h2>
+<div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8 max-w-xl">
 
-    <div class="card p-4 shadow-sm">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+        <h2 class="text-4xl font-extrabold text-danger tracking-wide">
+            Delete Product
+        </h2>
+        <p class="mt-2 text-gray-400">
+            This action is permanent and cannot be undone.
+        </p>
+    </div>
 
-        <p class="fs-5">
-            Are you sure you want to delete this product?
+    <!-- Confirmation Card -->
+    <div class="bg-secondary-dark p-8 rounded-2xl shadow-2xl border border-card-dark">
+
+        <p class="text-lg text-gray-200 mb-6 text-center">
+            Are you absolutely sure you want to delete this product?
         </p>
 
-        <div class="product-info mb-3">
-            <strong>Name:</strong> {{ product.name }} <br>
-            <strong>Price:</strong> ₹{{ product.price }} <br>
-            <strong>Category:</strong> {{ product.category }} <br>
+        <!-- Product Info -->
+        <div class="bg-card-dark rounded-xl p-6 mb-8 space-y-3 text-gray-300 border border-card-dark/60">
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-400">Name</span>
+                <span class="font-bold text-gray-100">{{ product.name }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-400">Price</span>
+                <span class="font-bold text-accent-luxury">₹{{ product.price }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-400">Category</span>
+                <span class="font-bold text-gray-200">{{ product.category }}</span>
+            </div>
         </div>
 
-        <form method="POST">
+        <!-- Actions -->
+        <form method="POST" class="flex flex-col sm:flex-row gap-4 justify-center">
             {% csrf_token %}
 
-            <button type="submit" class="btn btn-danger">
-                Yes, delete it
+            <button type="submit"
+                class="flex-1 bg-danger hover:bg-red-700 text-white font-black py-3 rounded-xl transition duration-300 shadow-xl uppercase tracking-wide">
+                Yes, Delete Product
             </button>
 
-            <a href="{% url 'manage_listings' %}" class="btn btn-secondary ms-2">
+            <a href="{% url 'manage_listings' %}"
+               class="flex-1 text-center bg-card-dark hover:bg-secondary-dark text-gray-200 font-semibold py-3 rounded-xl transition duration-300 border border-card-dark/60">
                 Cancel
             </a>
         </form>
-
     </div>
+
 </div>
+
 {% endblock %}

@@ -9,110 +9,65 @@
     </h2>
 
     {% if items %}
-    <div class="bg-secondary-dark p-6 rounded-xl shadow-2xl overflow-x-auto">
-        
-        <table class="w-full text-left table-auto">
-            
-            <thead class="uppercase text-sm font-semibold text-gray-400 border-b border-card-dark/70">
-                <tr>
-                    <th class="py-3 px-4 w-24">Item</th>
-                    <th class="py-3 px-4">Product Name</th>
-                    <th class="py-3 px-4 hidden sm:table-cell">Unit Price</th>
-                    <th class="py-3 px-4 text-center w-36">Quantity</th>
-                    <th class="py-3 px-4 w-32">Subtotal</th>
-                    <th class="py-3 px-4 w-20"></th>
-                </tr>
-            </thead>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <tbody class="divide-y divide-card-dark">
-                {% for item in items %}
-                <tr class="hover:bg-card-dark/50 transition duration-200">
-                    
-                    <td class="py-4 px-4">
-                        {% if item.product.images.first %}
-                            <img src="{{ item.product.images.first.image.url }}" 
-                                 class="w-16 h-16 object-cover rounded-md shadow-md">
-                        {% else %}
-                            <div class="w-16 h-16 bg-card-dark rounded-md flex items-center justify-center text-xs text-gray-500 border border-gray-600">No Image</div>
-                        {% endif %}
-                    </td>
-
-                    <td class="py-4 px-4 font-semibold text-gray-100">
-                        <a href="{% url 'product_detail' item.product.id %}" class="hover:text-accent-luxury transition">
-                            {{ item.product.name }}
-                        </a>
-                    </td>
-
-                    <td class="py-4 px-4 hidden sm:table-cell text-accent-hover font-medium">
-                        ₹{{ item.product_price }}
-                    </td>
-
-                    <td class="py-4 px-4 text-center">
-                        <div class="flex items-center justify-center space-x-2">
-                            
-                            <a href="{% url 'decrease_quantity' item.id %}" 
-                               class="text-gray-400 hover:text-accent-luxury border border-card-dark rounded-full w-7 h-7 flex items-center justify-center transition active:scale-95">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
-                            </a>
-                            
-                            <span class="text-lg font-bold text-gray-100 w-4">{{ item.quantity }}</span>
-                            
-                            <a href="{% url 'increase_quantity' item.id %}" 
-                               class="text-gray-400 hover:text-accent-luxury border border-card-dark rounded-full w-7 h-7 flex items-center justify-center transition active:scale-95">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
-                            </a>
-                        </div>
-                    </td>
-
-                    <td class="py-4 px-4 text-xl font-bold text-accent-luxury">
-                        ₹{{ item.total_price }}
-                    </td>
-
-                    <td class="py-4 px-4 text-center">
-                        <a href="{% url 'remove_from_cart' item.id %}"
-                           title="Remove Item"
-                           class="text-red-500 hover:text-red-400 transition duration-200 active:scale-90">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-    </div>
-    
-    <div class="flex flex-col sm:flex-row justify-end items-end sm:items-center mt-8 gap-4">
-
-        <div class="bg-card-dark p-4 rounded-xl shadow-lg border-2 border-accent-luxury">
-            <h3 class="text-xl text-gray-300 font-semibold mb-1">Cart Total</h3>
-            <p class="text-4xl font-black text-accent-luxury">₹{{ cart_total }}</p>
+        <!-- Cart Items -->
+        <div class="lg:col-span-2 bg-secondary-dark p-6 rounded-xl shadow-2xl overflow-x-auto">
+            <table class="w-full text-left table-auto">
+                <thead class="uppercase text-sm font-semibold text-gray-400 border-b border-card-dark/70">
+                    <tr>
+                        <th class="py-3 px-4 w-24">Item</th>
+                        <th class="py-3 px-4">Product</th>
+                        <th class="py-3 px-4 hidden sm:table-cell">Price</th>
+                        <th class="py-3 px-4 text-center w-36">Qty</th>
+                        <th class="py-3 px-4 w-32">Subtotal</th>
+                        <th class="py-3 px-4 w-20"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-card-dark">
+                    {% for item in items %}
+                    <tr class="hover:bg-card-dark/50 transition">
+                        <td class="py-4 px-4">
+                            {% if item.product.images.first %}
+                                <img src="{{ item.product.images.first.image.url }}" class="w-16 h-16 object-cover rounded-md">
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-4 font-semibold text-gray-100">{{ item.product.name }}</td>
+                        <td class="py-4 px-4 hidden sm:table-cell text-accent-hover">₹{{ item.product_price }}</td>
+                        <td class="py-4 px-4 text-center">{{ item.quantity }}</td>
+                        <td class="py-4 px-4 font-bold text-accent-luxury">₹{{ item.total_price }}</td>
+                        <td class="py-4 px-4 text-center">
+                            <a href="{% url 'remove_from_cart' item.id %}" class="text-red-500">✕</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        
-        <div class="flex flex-col sm:flex-row gap-4">
-            
-            <a href="{% url 'clear_cart' %}" 
-               class="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 text-lg shadow-md">
-                Clear Cart
-            </a>
-            
-            <a href="{% url 'checkout' %}" 
-               class="bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 px-10 rounded-lg transition duration-300 text-lg uppercase shadow-2xl transform hover:scale-[1.01]">
-                Proceed to Checkout
-            </a>
 
+        <!-- Order Summary -->
+        <div class="bg-card-dark p-6 rounded-xl shadow-xl border border-accent-luxury/40 h-fit sticky top-24">
+            <h3 class="text-2xl font-bold text-gray-100 mb-4">Order Summary</h3>
+            <div class="flex justify-between text-gray-300 mb-2">
+                <span>Total Items</span>
+                <span>{{ items|length }}</span>
+            </div>
+            <div class="flex justify-between text-xl font-extrabold text-accent-luxury border-t border-card-dark pt-4 mb-6">
+                <span>Total</span>
+                <span>₹{{ cart_total }}</span>
+            </div>
+            <a href="{% url 'checkout' %}" class="block w-full text-center bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-lg uppercase shadow-lg transition">
+                Checkout Securely
+            </a>
+            <a href="{% url 'clear_cart' %}" class="block text-center mt-4 text-sm text-gray-400 hover:text-red-400">Clear Cart</a>
         </div>
 
     </div>
 
     {% else %}
-    <div class="text-center mt-10 p-10 bg-secondary-dark rounded-xl shadow-lg">
-        <h3 class="text-2xl font-semibold text-accent-luxury mb-3">Your Cart is Empty</h3>
-        <p class="text-gray-400">Time to explore our exclusive collection and find something luxurious!</p>
-        <a href="{% url 'product_list' %}" 
-           class="mt-6 inline-block bg-card-dark hover:bg-primary-dark text-accent-luxury font-semibold py-2 px-6 rounded-lg transition border border-accent-luxury/50">
-           Continue Shopping →
-        </a>
+    <div class="text-center mt-12 bg-secondary-dark p-10 rounded-xl shadow-lg">
+        <h3 class="text-2xl text-accent-luxury font-bold">Your cart is empty</h3>
+        <a href="{% url 'product_list' %}" class="inline-block mt-6 bg-card-dark text-accent-luxury px-6 py-2 rounded-lg border border-accent-luxury/50">Continue Shopping →</a>
     </div>
     {% endif %}
 

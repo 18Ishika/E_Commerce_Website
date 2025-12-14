@@ -3,104 +3,142 @@
 
 {% block content %}
 
-<div class="container mx-auto py-10 px-4 max-w-5xl">
+<div class="container mx-auto py-12 px-4 max-w-6xl">
 
-    <h2 class="text-3xl font-bold mb-8 text-gray-100">Your Orders</h2>
+    <!-- PAGE HEADER -->
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-4xl font-extrabold text-accent-luxury tracking-wide">
+            Your Orders
+        </h2>
+        <p class="text-gray-400 text-sm">
+            {{ orders|length }} order{{ orders|length|pluralize }}
+        </p>
+    </div>
 
     {% if orders %}
         {% for order in orders %}
-        <div class="bg-gray-900/40 backdrop-blur-lg border border-gray-700 rounded-xl shadow-lg p-6 mb-8">
+        <div class="relative bg-secondary-dark/40 backdrop-blur-xl border border-card-dark rounded-2xl shadow-2xl p-8 mb-10">
 
             <!-- ORDER HEADER -->
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-semibold text-accent-luxury">
-                    Order #{{ order.id }}
-                </h3>
-                <p class="text-sm text-gray-400">
-                    {{ order.created_at|date:"M d, Y • h:i A" }}
-                </p>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-100">
+                        Order #{{ order.id }}
+                    </h3>
+                    <p class="text-sm text-gray-400 mt-1">
+                        Placed on {{ order.created_at|date:"M d, Y • h:i A" }}
+                    </p>
+                </div>
+
+                <!-- ORDER STATUS BADGE -->
+                <div>
+                    {% if order.current_status == "DELIVERED" %}
+                        <span class="px-4 py-2 rounded-full bg-green-500/20 text-green-400 font-semibold text-sm">
+                            Delivered
+                        </span>
+                    {% elif order.current_status == "SHIPPED" %}
+                        <span class="px-4 py-2 rounded-full bg-purple-500/20 text-purple-400 font-semibold text-sm">
+                            Shipped
+                        </span>
+                    {% elif order.current_status == "OUT_FOR_DELIVERY" %}
+                        <span class="px-4 py-2 rounded-full bg-orange-500/20 text-orange-400 font-semibold text-sm">
+                            Out for Delivery
+                        </span>
+                    {% elif order.current_status == "PAYMENT_SUCCESS" %}
+                        <span class="px-4 py-2 rounded-full bg-blue-500/20 text-blue-400 font-semibold text-sm">
+                            Payment Successful
+                        </span>
+                    {% else %}
+                        <span class="px-4 py-2 rounded-full bg-red-500/20 text-red-400 font-semibold text-sm">
+                            Cancelled
+                        </span>
+                    {% endif %}
+                </div>
             </div>
 
-            <!-- PAYMENT STATUS -->
-            <div class="mb-3">
-                <span class="text-gray-400 mr-2">Payment:</span>
-                {% if order.payment.status == "SUCCESS" %}
-                    <span class="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-lg">
-                        Successful
-                    </span>
-                {% elif order.payment.status == "FAILED" %}
-                    <span class="px-3 py-1 bg-red-500/20 text-red-400 text-sm rounded-lg">
-                        Failed
-                    </span>
-                {% else %}
-                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-sm rounded-lg">
-                        Pending
-                    </span>
+            <!-- PAYMENT + TRACKING -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-gray-400 text-sm mb-1">Payment Status</p>
+                    {% if order.payment.status == "SUCCESS" %}
+                        <span class="text-green-400 font-semibold">Successful</span>
+                    {% elif order.payment.status == "FAILED" %}
+                        <span class="text-red-400 font-semibold">Failed</span>
+                    {% else %}
+                        <span class="text-yellow-400 font-semibold">Pending</span>
+                    {% endif %}
+                </div>
+
+                {% if order.tracking_id %}
+                <div>
+                    <p class="text-gray-400 text-sm mb-1">Tracking ID</p>
+                    <p class="text-gray-200 font-medium">{{ order.tracking_id }}</p>
+                </div>
                 {% endif %}
             </div>
-
-            <!-- CURRENT ORDER STATUS -->
-            <div class="mb-3">
-                <span class="text-gray-400 mr-2">Order Status:</span>
-
-                {% if order.current_status == "PAYMENT_SUCCESS" %}
-                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-sm rounded-lg">Payment Successful</span>
-                {% elif order.current_status == "SHIPPED" %}
-                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-sm rounded-lg">Shipped</span>
-                {% elif order.current_status == "OUT_FOR_DELIVERY" %}
-                    <span class="px-3 py-1 bg-orange-500/20 text-orange-400 text-sm rounded-lg">Out for Delivery</span>
-                {% elif order.current_status == "DELIVERED" %}
-                    <span class="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-lg">Delivered</span>
-                {% else %}
-                    <span class="px-3 py-1 bg-red-500/20 text-red-400 text-sm rounded-lg">Cancelled</span>
-                {% endif %}
-            </div>
-
-            <!-- TRACKING ID -->
-            {% if order.tracking_id %}
-            <div class="mb-4">
-                <span class="text-gray-400 mr-2">Tracking ID:</span>
-                <span class="text-gray-200 font-medium">{{ order.tracking_id }}</span>
-            </div>
-            {% endif %}
 
             <!-- ORDER ITEMS -->
-            <div class="border-t border-gray-700 pt-4 mt-4">
-                <h4 class="text-lg font-semibold text-gray-200 mb-3">Items</h4>
+            <div class="border-t border-card-dark pt-6">
+                <h4 class="text-lg font-bold text-gray-200 mb-4">Order Items</h4>
 
-                {% for item in order.items.all %}
-                <div class="flex items-center justify-between bg-gray-800/40 p-3 rounded-lg mb-2">
-                    <div>
-                        <p class="text-gray-200 font-medium">{{ item.product_name }}</p>
-                        <p class="text-gray-400 text-sm">Qty: {{ item.quantity }}</p>
+                <div class="space-y-3">
+                    {% for item in order.items.all %}
+                    <div class="flex justify-between items-center bg-card-dark/60 p-4 rounded-xl">
+                        <div>
+                            <p class="text-gray-100 font-medium">{{ item.product_name }}</p>
+                            <p class="text-gray-400 text-sm">Quantity: {{ item.quantity }}</p>
+                        </div>
+                        <p class="text-accent-luxury font-bold text-lg">
+                            ₹{{ item.total }}
+                        </p>
                     </div>
-                    <p class="text-gray-300 font-semibold">₹{{ item.total }}</p>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
 
             <!-- STATUS TIMELINE -->
-            <div class="border-t border-gray-700 mt-6 pt-4">
-                <h4 class="text-lg font-semibold text-gray-200 mb-3">Status Timeline</h4>
+            <div class="border-t border-card-dark mt-8 pt-6">
+                <h4 class="text-lg font-bold text-gray-200 mb-4">Order Timeline</h4>
 
-                {% for log in order.status_updates.all %}
-                <div class="mb-2 p-3 bg-gray-800/30 rounded-lg border border-gray-700">
-                    <p class="text-accent-luxury font-medium">{{ log.get_status_display }}</p>
-                    <p class="text-gray-400 text-sm">{{ log.timestamp|date:"M d, Y h:i A" }}</p>
-                    {% if log.note %}
-                        <p class="text-gray-500 text-xs mt-1">Note: {{ log.note }}</p>
-                    {% endif %}
+                <div class="space-y-3">
+                    {% for log in order.status_updates.all %}
+                    <div class="relative pl-6 pb-4 border-l border-accent-luxury/30">
+                        <span class="absolute left-[-6px] top-1 w-3 h-3 rounded-full bg-accent-luxury"></span>
+
+                        <p class="text-accent-luxury font-semibold">
+                            {{ log.get_status_display }}
+                        </p>
+                        <p class="text-gray-400 text-sm">
+                            {{ log.timestamp|date:"M d, Y • h:i A" }}
+                        </p>
+                        {% if log.note %}
+                            <p class="text-gray-500 text-xs mt-1">
+                                {{ log.note }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-sm">No updates yet.</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <p class="text-gray-500 text-sm">No updates yet.</p>
-                {% endfor %}
             </div>
 
         </div>
         {% endfor %}
 
     {% else %}
-        <p class="text-gray-400 text-center text-lg">You have no orders yet.</p>
+        <div class="text-center py-20 bg-secondary-dark rounded-2xl shadow-xl">
+            <h3 class="text-3xl font-bold text-accent-luxury mb-3">
+                No Orders Yet
+            </h3>
+            <p class="text-gray-400 mb-6">
+                Looks like you haven’t placed any orders yet.
+            </p>
+            <a href="{% url 'product_list' %}"
+               class="inline-block bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black px-8 py-3 rounded-xl transition shadow-lg">
+                Start Shopping
+            </a>
+        </div>
     {% endif %}
 
 </div>

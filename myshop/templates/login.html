@@ -1,69 +1,86 @@
 {% extends "base.html" %}
-{% block title %} Login to Shopzee {% endblock %}
+{% block title %} Login to Shopzy {% endblock %}
 
 {% block content %}
 
-<div class="flex justify-center items-center py-16 px-4">
-    <div class="bg-secondary-dark p-10 sm:p-12 rounded-2xl shadow-3xl w-full max-w-md border border-card-dark transform hover:shadow-accent-luxury/30 transition duration-500">
+<div class="min-h-[80vh] flex items-center justify-center px-4">
 
-        <h2 class="text-4xl font-extrabold text-accent-luxury mb-8 text-center tracking-wider">
-            Welcome Back!
-        </h2>
+    <div class="relative w-full max-w-md">
 
-        <form method="POST" class="space-y-6">
-            {% csrf_token %}
+        <!-- Glow -->
+        <div class="absolute -inset-1 rounded-3xl bg-accent-luxury/20 blur-2xl"></div>
 
-            <div>
-                <label for="id_username" class="block mb-2 font-semibold text-gray-300">Username</label>
-                <input 
-                    type="text" 
-                    id="id_username"
-                    name="username"
-                    placeholder="Enter your username"
-                    required
-                    class="w-full p-3 rounded-lg bg-card-dark text-gray-200 border border-gray-600 focus:border-accent-luxury focus:ring-2 focus:ring-accent-luxury outline-none transition duration-200"
-                >
-            </div>
+        <!-- Card -->
+        <div class="relative bg-secondary-dark p-10 sm:p-12 rounded-3xl shadow-2xl border border-card-dark">
 
-            <div>
-                <label for="id_password" class="block mb-2 font-semibold text-gray-300">Password</label>
-                <input 
-                    type="password" 
-                    id="id_password"
-                    name="password"
-                    placeholder="••••••••"
-                    required
-                    class="w-full p-3 rounded-lg bg-card-dark text-gray-200 border border-gray-600 focus:border-accent-luxury focus:ring-2 focus:ring-accent-luxury outline-none transition duration-200"
-                >
-            </div>
+            <h2 class="text-4xl font-extrabold text-accent-luxury mb-2 text-center tracking-widest">
+                Welcome Back
+            </h2>
+            <p class="text-center text-gray-400 mb-8">
+                Sign in to continue shopping on <span class="text-accent-hover font-semibold">Shopzy</span>
+            </p>
 
-            {% if messages %}
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="space-y-1">
+                    <label for="id_username" class="text-sm font-semibold text-gray-300">Username</label>
+                    <input
+                        type="text"
+                        id="id_username"
+                        name="username"
+                        placeholder="your_username"
+                        required
+                        class="w-full px-4 py-3 rounded-xl bg-card-dark text-gray-200 border border-card-dark focus:border-accent-luxury focus:ring-2 focus:ring-accent-luxury outline-none transition"
+                    >
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1">
+                    <label for="id_password" class="text-sm font-semibold text-gray-300">Password</label>
+                    <input
+                        type="password"
+                        id="id_password"
+                        name="password"
+                        placeholder="••••••••"
+                        required
+                        class="w-full px-4 py-3 rounded-xl bg-card-dark text-gray-200 border border-card-dark focus:border-accent-luxury focus:ring-2 focus:ring-accent-luxury outline-none transition"
+                    >
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
                 <div class="space-y-2">
                     {% for msg in messages %}
-                        <p class="p-3 bg-red-800 rounded-lg text-white font-medium text-sm border border-red-500">{{ msg }}</p>
+                    <div class="p-3 rounded-xl text-sm font-semibold bg-red-800/80 border border-red-500 text-white">
+                        {{ msg }}
+                    </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+                {% endif %}
 
-            <button 
-                type="submit"
-                class="w-full bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-lg shadow-xl transition duration-300 text-lg uppercase mt-8 transform hover:scale-[1.01]"
-            >
-                Secure Login
-            </button>
+                <!-- Button -->
+                <button
+                    type="submit"
+                    class="w-full mt-6 bg-accent-luxury hover:bg-accent-hover text-primary-dark font-black py-3 rounded-xl shadow-xl transition transform hover:scale-[1.02] uppercase tracking-wider"
+                >
+                    Login Securely
+                </button>
 
-        </form>
+            </form>
 
-        <div class="text-center mt-6 pt-4 border-t border-card-dark/50">
-            <p class="text-gray-400">
-                Don't have an account? 
-                <a href="{% url 'buyer_signup' %}" class="text-accent-luxury hover:text-accent-hover font-semibold transition duration-200">
-                    Sign Up Now
-                </a>
-            </p>
-            
+            <!-- Footer -->
+            <div class="mt-8 pt-6 border-t border-card-dark text-center">
+                <p class="text-gray-400">
+                    New to Shopzy?
+                    <a href="{% url 'buyer_signup' %}" class="ml-1 text-accent-luxury hover:text-accent-hover font-bold transition">
+                        Create an account
+                    </a>
+                </p>
+            </div>
+
         </div>
-
     </div>
 </div>
 

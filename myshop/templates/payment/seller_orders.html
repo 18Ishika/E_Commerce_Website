@@ -2,56 +2,70 @@
 {% load static %}
 
 {% block content %}
-<div class="container mx-auto py-10">
+<div class="container mx-auto py-10 max-w-6xl">
 
-    <h1 class="text-3xl font-bold mb-6">Orders Received</h1>
+    <h1 class="text-4xl font-extrabold mb-8 text-accent-luxury border-b border-card-dark pb-3">
+        Orders Received
+    </h1>
 
     {% if orders %}
         <div class="space-y-6">
             {% for order in orders %}
-            <div class="border p-5 rounded-lg shadow bg-white">
+            <div class="bg-secondary-dark rounded-2xl p-6 shadow-lg border border-card-dark hover:shadow-2xl transition duration-300">
 
-                <div class="flex justify-between">
-                    <h2 class="text-xl font-semibold">Order #{{ order.id }}</h2>
-                    <span class="px-3 py-1 rounded text-white {% if order.current_status == 'DELIVERED' %}bg-green-600{% elif order.current_status == 'CANCELLED' %}bg-red-600{% else %}bg-blue-600{% endif %}">
+                <!-- ORDER HEADER -->
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+                    <h2 class="text-2xl font-bold text-gray-100">Order #{{ order.id }}</h2>
+                    <span class="px-4 py-1 rounded-full text-sm font-semibold 
+                                 {% if order.current_status == 'DELIVERED' %}bg-green-600 text-white
+                                 {% elif order.current_status == 'CANCELLED' %}bg-red-600 text-white
+                                 {% else %}bg-blue-600 text-white{% endif %}">
                         {{ order.get_current_status_display }}
                     </span>
                 </div>
 
-                <p class="text-gray-600">Placed on: {{ order.created_at|date:"M d, Y h:i A" }}</p>
+                <p class="text-gray-400 mt-1 text-sm">Placed on: {{ order.created_at|date:"M d, Y h:i A" }}</p>
 
-                <h3 class="mt-4 font-semibold">Products:</h3>
-                <ul class="ml-4">
-                    {% for item in order.items.all %}
-                        {% if item.product.seller == request.user %}
-                        <li class="mt-2">
-                            <strong>{{ item.product_name }}</strong>  
-                            × {{ item.quantity }} — ₹{{ item.total }}
-                        </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-
+                <!-- ORDER ITEMS -->
                 <div class="mt-4">
-    {% if order.payment.status == "SUCCESS" %}
-        <a href="{% url 'update_order_status' order.id %}"
-           class="bg-black text-white px-4 py-2 rounded">
-           Update Status
-        </a>
-    {% else %}
-        <span class="text-sm text-gray-500 italic">
-            Payment not completed
-        </span>
-    {% endif %}
-</div>
+                    <h3 class="text-lg font-semibold text-accent-luxury mb-2">Products:</h3>
+                    <ul class="space-y-2 ml-4">
+                        {% for item in order.items.all %}
+                            {% if item.product.seller == request.user %}
+                            <li class="flex justify-between items-center bg-card-dark p-3 rounded-lg">
+                                <div>
+                                    <strong class="text-gray-100">{{ item.product_name }}</strong>
+                                    <span class="text-gray-400">× {{ item.quantity }}</span>
+                                </div>
+                                <span class="font-semibold text-accent-luxury">₹{{ item.total }}</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
 
+                <!-- ACTION BUTTON -->
+                <div class="mt-4">
+                    {% if order.payment.status == "SUCCESS" %}
+                    <a href="{% url 'update_order_status' order.id %}"
+                       class="inline-block bg-accent-luxury hover:bg-accent-hover text-primary-dark font-bold px-5 py-2 rounded-xl shadow transition transform hover:scale-[1.02]">
+                        Update Status
+                    </a>
+                    {% else %}
+                    <span class="text-sm text-gray-500 italic">
+                        Payment not completed
+                    </span>
+                    {% endif %}
+                </div>
 
             </div>
             {% endfor %}
         </div>
 
     {% else %}
-        <p class="text-gray-600 text-lg">No orders received yet.</p>
+        <div class="text-center py-10">
+            <p class="text-gray-400 text-lg">No orders received yet.</p>
+        </div>
     {% endif %}
 
 </div>
