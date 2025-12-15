@@ -1,0 +1,155 @@
+SHOPZY MASTER MANUAL
+
+==========================
+1. ACCOUNT AND PROFILE
+==========================
+
+Account Creation:
+- Users can register using email and password.
+- Each account is unique.
+- Email verification is not yet implemented.
+
+Login:
+- Login is required to place orders or view order history.
+- Incorrect login attempts are rejected.
+- Password recovery is not yet available.
+
+Profile Management:
+- Users can update personal information in the profile section.
+- Address information is required for order delivery.
+- Profile deletion is not yet supported.
+
+Security:
+- Users are responsible for keeping login credentials secure.
+- Logout is recommended when using shared devices.
+
+==========================
+2. PLACING AND MANAGING ORDERS
+==========================
+
+Browsing Products:
+- Users can browse products by categories.
+- Search by name or filter by category is available.
+
+Adding to Cart:
+- Users can add products to their cart.
+- Cart can be updated by changing quantity or removing items.
+
+Placing an Order:
+- Orders can only be placed by logged-in users.
+- Orders are confirmed only after successful payment.
+- Multiple orders can be placed at the same time.
+
+Order Confirmation:
+- After placing an order, users receive confirmation on the website.
+- Each order has a unique order ID.
+- Email notifications for orders are not yet implemented.
+
+Order Status:
+- Current statuses: Pending, Shipped, Delivered, Cancelled.
+- Status updates automatically based on system or seller updates.
+
+Order History:
+- Users can view all past orders in the Order History section.
+- Each order shows items, quantity, price, and status.
+
+Cancellations:
+- Order cancellation is not yet available.
+
+==========================
+3. PAYMENT
+==========================
+
+Payment Method:
+- Only mock payments are currently supported.
+- No real money is deducted during transactions.
+
+Payment Flow:
+- Users are redirected to a mock payment page after checkout.
+- Payment can have statuses: Pending, Success, or Failed.
+- Refunds or partial payments are not yet supported.
+
+Payment Issues:
+- If a payment fails, users can retry the payment.
+- Failed payments do not confirm the order.
+
+==========================
+4. DELIVERY AND SHIPPING
+==========================
+
+Delivery Time:
+- Standard delivery time is 3–5 business days.
+- Delivery times may vary based on location and external factors.
+
+Shipping Process:
+- Orders are shipped after payment confirmation.
+- Sellers update shipping status manually in the system.
+
+Delivery Tracking:
+- Users can track orders from the Order History page.
+- Estimated delivery notifications via email or SMS are not yet implemented.
+
+Delivery Issues:
+- Users can contact support if delivery is delayed.
+- Automatic compensation or support tickets are not yet functional.
+
+==========================
+5. RETURN AND REFUND
+==========================
+
+Return and Refunds:
+- Product returns and refunds are **not yet available**.
+- Users cannot initiate return requests at this time.
+- Refund processing is not functional currently.
+
+==========================
+6. PRODUCTS
+==========================
+
+Product Information:
+- Each product includes Name, Category, Price, Description, and Availability.
+- Product availability shows "In stock" or "Out of stock".
+- Product ratings and reviews are not yet implemented.
+
+Searching Products:
+- Users can search by name, category, or keyword.
+- Filters by price or category are functional.
+
+Stock Management:
+- Stock levels are updated automatically when orders are confirmed.
+- Backorders or notifications for out-of-stock items are not yet available.
+
+==========================
+7. TROUBLESHOOTING
+==========================
+
+Login Issues:
+- Ensure correct email and password.
+- Reset password functionality is not yet available.
+- Logout and login again if facing issues.
+
+Order Issues:
+- Orders not visible may indicate failed payment.
+- Refresh Order History page to see latest updates.
+
+Payment Issues:
+- Retry payment if failed.
+- Contact support if issues persist.
+
+General Issues:
+- Clear browser cache if pages do not load correctly.
+- Report bugs to support for unresolved problems.
+
+==========================
+8. FUTURE FEATURES (NOT YET AVAILABLE)
+==========================
+
+- Returns and refunds.
+- Email/SMS notifications for orders.
+- Advanced search filters and sorting.
+- User account deletion.
+- Reviews and ratings for products.
+- Loyalty points, offers, or promotions.
+- Wishlist functionality.
+- Multi-address support for deliveries.
+- Password recovery via email.
