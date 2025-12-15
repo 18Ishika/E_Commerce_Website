@@ -19,7 +19,7 @@ gst_validator = RegexValidator(
 class BuyerSignUpForm(UserCreationForm):
     email=forms.EmailField(required=True)
     phone=forms.CharField(required=False,max_length=15)
-    class Meta:
+    class Meta: #django told about how to save as per model
         model=User
         fields=("username","email","phone","password1","password2")
     def save(self,commit=True):
@@ -29,6 +29,7 @@ class BuyerSignUpForm(UserCreationForm):
             user.save()
         return user
 class BuyerProfileForm(forms.ModelForm):
+    #we can take everything thru meta field that takes default char field but some fields need extra validation so explicitly define them as they  override meta class
     pincode=forms.CharField(required=False,validators=[pincode_validator])
     class Meta:
         model=BuyerProfile

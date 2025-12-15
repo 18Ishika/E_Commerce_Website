@@ -29,7 +29,7 @@ urlpatterns = [
     path("products/", include("products.urls")),
     path("cart/", include("cart.urls")),
     path("payment/", include("payment.urls")),
-
+    path("chat/", include("chat.urls")),
     # Home page
     path("", product_list, name="product_list"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
