@@ -100,6 +100,11 @@ This project is ideal for learning **full-stack web development** concepts, incl
 
 ---
 
+### Chatbot - RAG
+- Build with vectorstore FAISS and used hugging face embeddings to convert the text of manual
+- Also used product and other details as context for better responses
+- Also maintains some history of previous messages to store the context.
+
 ## Tech Stack
 
 - **Backend**: Django, Django ORM
@@ -167,10 +172,10 @@ myshop/
 │  ├─ models.py      # Product, ProductImage, Review
 │  ├─ forms.py       # ProductForm, ProductImageForm, ReviewForm
 │  ├─ views.py       # Product CRUD, reviews, search, orders
-│  └─ templates/
-├─ users/
+│  
+├─ accounts/
 │  ├─ models.py      # User, BuyerProfile, SellerProfile
-│  └─ templates/
+│  └─ views.py
 ├─ templates/
 │  ├─ base.html
 │  └─ ...
@@ -187,10 +192,11 @@ myshop/
 
 29e4" />
 
-<img width="1360" height="702" alt="Screenshot 2025-12-14 103220" src="https://github.com/user-attachments/assets/3ae5de37-8335-40e4-80dc-6967d2609585" />
+<img width="1345" height="683" alt="image" src="https://github.com/user-attachments/assets/08ad8133-c1fa-4b45-bc09-f9d6517fc649" />
+
 <img width="1363" height="715" alt="Screenshot 2025-12-14 103247" src="https://github.com/user-attachments/assets/c9dff470-82bc-4f74-b229-322be5564e16" />
 
 <img width="1361" height="663" alt="Screenshot 2025-12-14 103308" src="https://github.com/user-attachments/assets/0479b998-aaeb-4255-9a81-c3826107f88e" />
 
 
-Working on adding RAG chatbot functionality to help you assist with the website.
+
